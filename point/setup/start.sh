@@ -126,6 +126,13 @@ setup_services () {
     done
 }
 
+# Грязные хаки, чтобы пойнт взлетел, пока в нём не хватает данных
+dirty_hacks () {
+    # Не дёргаем welcome при регистрации
+    sed -i -e 's/add_post(/#add_post(/' ${POINT_DIR}/core/lib/point/app/users.py
+    sed -i -e 's/author=User/#author=User/' ${POINT_DIR}/core/lib/point/app/users.py
+}
+
 if [ -f $POINT_IS_ALREADY_SETUP ]; then
     /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
 else
@@ -137,6 +144,7 @@ else
     setup_app
     setup_user
     setup_services
+    dirty_hacks
 
     date >> $POINT_IS_ALREADY_SETUP
 fi

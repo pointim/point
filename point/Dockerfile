@@ -14,6 +14,7 @@ RUN locale-gen en_US.UTF-8 && \
     update-locale LANG=en_US.UTF-8 && \
     echo ${timezone} >> /etc/timezone && \
     ntpdate -s ntp.ubuntu.com && \
+    apt-get update && \
     apt-get install -y --no-install-recommends software-properties-common && \
     add-apt-repository -y ppa:nginx/stable && \
     apt-get update && \

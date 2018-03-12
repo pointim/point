@@ -1,0 +1,53 @@
+version: "3"
+services:
+  www:
+    build:
+      context: ./www
+      dockerfile: Dockerfile.www
+    ports:
+     - "8088:8088"
+    volumes:
+     - ../img:/home/point/img
+    links:
+     - db
+     - redis-storage
+     - redis-cache
+     - redis-queue
+     - redis-pubsub
+  websocket:
+    build:
+      context: ./www
+      dockerfile: Dockerfile.websocket
+    ports:
+     - "8089:8089"
+    links:
+     - db
+     - redis-storage
+     - redis-cache
+     - redis-queue
+     - redis-pubsub
+  nginx:
+    image: "nginx"
+    volumes:
+     - ./img:/home/point/img
+     - ./www/static:/home/point/www/static
+  db:
+    image: "postgres:9.3"
+    volumes:
+     - ./postgresql:/var/lib/postgresql
+  redis-storage:
+    image: "redis:alpine"
+    volumes:
+     - ./redis/storage:/var/lib/redis
+  redis-cache:
+    image: "redis:alpine"
+    volumes:
+     - ./redis/cache:/var/lib/redis
+  redis-queue:
+    image: "redis:alpine"
+    volumes:
+     - ./redis/queue:/var/lib/redis
+  redis-pubsub:
+    image: "redis:alpine"
+    volumes:
+     - ./redis/pubsub:/var/lib/redis

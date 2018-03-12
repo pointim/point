@@ -1,1 +1,10 @@
-config.mk
+core
+doc
+feed
+img
+imgproc
+postgresql
+redis
+stat
+www
+xmpp

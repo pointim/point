@@ -7,47 +7,79 @@ services:
     ports:
      - "8088:8088"
     volumes:
-     - ../img:/home/point/img
+     - ./img:/home/point/img
+     - ./log:/home/point/log
     links:
      - db
      - redis-storage
      - redis-cache
      - redis-queue
      - redis-pubsub
-  websocket:
-    build:
-      context: ./www
-      dockerfile: Dockerfile.websocket
-    ports:
-     - "8089:8089"
-    links:
-     - db
-     - redis-storage
-     - redis-cache
-     - redis-queue
-     - redis-pubsub
+     - redis-sessions
+     - redis-imgproc
+  #websocket:
+  #  build:
+  #    context: ./www
+  #    dockerfile: Dockerfile.websocket
+  #  ports:
+  #   - "8089:8089"
+  #  links:
+  #   - db
+  #   - redis-storage
+  #   - redis-cache
+  #   - redis-queue
+  #   - redis-pubsub
+  #   - redis-sessions
   nginx:
     image: "nginx"
     volumes:
      - ./img:/home/point/img
      - ./www/static:/home/point/www/static
+    links:
+     - www
+     #- websocket
   db:
-    image: "postgres:9.3"
+    image: "point-db"
+    restart: always
+    environment:
+      POSTGRES_USER: point
+      POSTGRES_PASSWORD: point
+      POSTGRES_DB: point
+    ports:
+     - "5432:5432"
     volumes:
      - ./postgresql:/var/lib/postgresql
   redis-storage:
     image: "redis:alpine"
+    sysctls:
+      net.core.somaxconn: '511'
     volumes:
-     - ./redis/storage:/var/lib/redis
+     - ./redis/storage:/data
   redis-cache:
     image: "redis:alpine"
+    sysctls:
+      net.core.somaxconn: '511'
     volumes:
-     - ./redis/cache:/var/lib/redis
+     - ./redis/cache:/data
+  redis-sessions:
+    image: "redis:alpine"
+    sysctls:
+      net.core.somaxconn: '511'
+    volumes:
+     - ./redis/sessions:/data
   redis-queue:
     image: "redis:alpine"
+    sysctls:
+      net.core.somaxconn: '511'
     volumes:
-     - ./redis/queue:/var/lib/redis
+     - ./redis/queue:/data
   redis-pubsub:
     image: "redis:alpine"
+    sysctls:
+      net.core.somaxconn: '511'
     volumes:
-     - ./redis/pubsub:/var/lib/redis
+     - ./redis/pubsub:/data
+  redis-imgproc:
+    image: "redis:alpine"
+    sysctls:
+      net.core.somaxconn: '511'

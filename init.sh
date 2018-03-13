@@ -6,4 +6,7 @@ done
 
 mkdir -p img
 mkdir -p postgresql
-mkdir -p redis/{storage,cache,queue,pubsub}
+mkdir -p redis/{storage,cache,sessions,queue,pubsub}
+
+docker build -t point-os -f ./Dockerfile.os .
+docker build -t point-db -f ./Dockerfile.db .

@@ -45,10 +45,10 @@ services:
       POSTGRES_USER: point
       POSTGRES_PASSWORD: point
       POSTGRES_DB: point
-    ports:
-     - "5432:5432"
+    #ports:
+    # - "5432:5432"
     volumes:
-     - ./postgresql:/var/lib/postgresql
+     - ./postgresql:/var/lib/postgresql/data
   redis-storage:
     image: "redis:alpine"
     sysctls:

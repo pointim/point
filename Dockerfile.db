@@ -1,7 +1,8 @@
 FROM postgres:10
 WORKDIR /var/lib/postgresql
 COPY ./docker-entrypoint-initdb.d /docker-entrypoint-initdb.d
-VOLUME ./postgresql /var/lib/postgresql
+VOLUME ["/var/lib/postgresql"]
 ENV POSTGRES_USER point
 ENV POSTGRES_PASSWORD point
 ENV POSTGRES_DB point
+EXPOSE 5432

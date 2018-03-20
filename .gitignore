@@ -8,4 +8,5 @@ redis
 stat
 www
 xmpp
+log
 docker-entrypoint-initdb.d/*.sql.gz

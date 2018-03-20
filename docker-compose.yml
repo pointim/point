@@ -4,9 +4,11 @@ services:
     build:
       context: ./www
       dockerfile: Dockerfile.www
-    ports:
-     - "8088:8088"
+    #ports:
+    # - "8088:8088"
     volumes:
+     - ./core:/home/point/core
+     - ./www:/home/point/www
      - ./img:/home/point/img
      - ./log:/home/point/log
     links:
@@ -17,27 +19,35 @@ services:
      - redis-pubsub
      - redis-sessions
      - redis-imgproc
-  #websocket:
-  #  build:
-  #    context: ./www
-  #    dockerfile: Dockerfile.websocket
-  #  ports:
-  #   - "8089:8089"
-  #  links:
-  #   - db
-  #   - redis-storage
-  #   - redis-cache
-  #   - redis-queue
-  #   - redis-pubsub
-  #   - redis-sessions
+  websocket:
+    build:
+      context: ./www
+      dockerfile: Dockerfile.websocket
+    volumes:
+     - ./core:/home/point/core
+     - ./www:/home/point/www
+     - ./log:/home/point/log
+    #ports:
+    # - "8089:8089"
+    links:
+     - db
+     - redis-storage
+     - redis-cache
+     - redis-queue
+     - redis-pubsub
+     - redis-sessions
   nginx:
     image: "nginx"
     volumes:
+     - ./www/etc/nginx/www.conf:/etc/nginx/conf.d/default.conf
+     - ./www/etc/nginx/www.vars:/etc/nginx/conf.d/www.vars
      - ./img:/home/point/img
      - ./www/static:/home/point/www/static
+    ports:
+     - "80:80"
     links:
      - www
-     #- websocket
+     - websocket
   db:
     image: "point-db"
     restart: always
@@ -51,35 +61,43 @@ services:
      - ./postgresql:/var/lib/postgresql/data
   redis-storage:
     image: "redis:alpine"
+    #entrypoint: redis-server --appendonly yes
     sysctls:
       net.core.somaxconn: '511'
     volumes:
      - ./redis/storage:/data
   redis-cache:
     image: "redis:alpine"
+    #entrypoint: redis-server --appendonly yes
     sysctls:
       net.core.somaxconn: '511'
     volumes:
      - ./redis/cache:/data
   redis-sessions:
     image: "redis:alpine"
+    #entrypoint: redis-server --appendonly yes
     sysctls:
       net.core.somaxconn: '511'
     volumes:
      - ./redis/sessions:/data
   redis-queue:
     image: "redis:alpine"
+    #entrypoint: redis-server --appendonly yes
     sysctls:
       net.core.somaxconn: '511'
     volumes:
      - ./redis/queue:/data
   redis-pubsub:
     image: "redis:alpine"
+    #entrypoint: redis-server --appendonly yes
     sysctls:
       net.core.somaxconn: '511'
     volumes:
      - ./redis/pubsub:/data
   redis-imgproc:
     image: "redis:alpine"
+    #entrypoint: redis-server --appendonly yes
     sysctls:
       net.core.somaxconn: '511'
+    volumes:
+     - ./redis/imgproc:/data

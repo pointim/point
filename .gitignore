@@ -9,4 +9,5 @@ stat
 www
 xmpp
 log
+ssl
 docker-entrypoint-initdb.d/*.sql.gz

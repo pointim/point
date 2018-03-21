@@ -105,7 +105,7 @@ services:
   nginx:
     image: "nginx"
     volumes:
-      # - /dev/null:/etc/nginx/conf.d/default.conf
+      - ./ssl:/home/point/ssl
       - ./www/etc/nginx/www.conf:/etc/nginx/conf.d/1-www.conf
       - ./imgproc/etc/nginx/imgproc.conf:/etc/nginx/conf.d/2-imgproc.conf
       - ./www/etc/nginx/www.vars:/etc/nginx/conf.d/www.vars
@@ -116,4 +116,5 @@ services:
       - websocket
     ports:
       - "80:80"
+      - "443:443"
 

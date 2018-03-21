@@ -71,6 +71,7 @@ services:
       - ./core:/home/point/core
       - ./www:/home/point/www
       - ./img:/home/point/img
+      - ./doc:/home/point/doc
       - ./log:/home/point/log
     depends_on:
       - db
@@ -110,6 +111,7 @@ services:
       - ./imgproc/etc/nginx/imgproc.conf:/etc/nginx/conf.d/2-imgproc.conf
       - ./www/etc/nginx/www.vars:/etc/nginx/conf.d/www.vars
       - ./img:/home/point/img
+      - ./doc:/home/point/doc
       - ./www/static:/home/point/www/static
     depends_on:
       - www

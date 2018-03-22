@@ -9,34 +9,32 @@ services:
       POSTGRES_USER: point
       POSTGRES_PASSWORD: point
       POSTGRES_DB: point
-    #ports:
-    # - "5432:5432"
     volumes:
       - ./data/postgresql:/var/lib/postgresql/data
+
   redis-storage:
     image: "redis:alpine"
-    #entrypoint: redis-server --appendonly yes
     sysctls:
       net.core.somaxconn: '511'
     volumes:
       - ./data/redis/storage:/data
+
   redis-cache:
     image: "redis:alpine"
-    #entrypoint: redis-server --appendonly yes
     sysctls:
       net.core.somaxconn: '511'
     volumes:
       - ./data/redis/cache:/data
+
   redis-queue:
     image: "redis:alpine"
-    #entrypoint: redis-server --appendonly yes
     sysctls:
       net.core.somaxconn: '511'
     volumes:
       - ./data/redis/queue:/data
+
   redis-pubsub:
     image: "redis:alpine"
-    #entrypoint: redis-server --appendonly yes
     sysctls:
       net.core.somaxconn: '511'
     volumes:
@@ -54,9 +52,9 @@ services:
     depends_on:
       - redis-cache
       - redis-imgproc
+
   redis-imgproc:
     image: "redis:alpine"
-    #entrypoint: redis-server --appendonly yes
     sysctls:
       net.core.somaxconn: '511'
     volumes:
@@ -81,6 +79,7 @@ services:
       - redis-pubsub
       - redis-sessions
       - redis-imgproc
+
   websocket:
     build:
       context: ./www
@@ -96,13 +95,14 @@ services:
       - redis-queue
       - redis-pubsub
       - redis-sessions
+
   redis-sessions:
     image: "redis:alpine"
-    #entrypoint: redis-server --appendonly yes
     sysctls:
       net.core.somaxconn: '511'
     volumes:
       - ./data/redis/sessions:/data
+
   nginx:
     image: "nginx"
     volumes:
@@ -124,6 +124,7 @@ services:
   prosody:
     build:
       context: ./xmpp
+      dockerfile: Dockerfile.prosody
     volumes:
       - ./xmpp/etc/prosody/prosody.cfg.lua:/etc/prosody/prosody.cfg.lua
       - ./ssl:/home/point/ssl
@@ -131,4 +132,19 @@ services:
     ports:
       - "5222:5222"
       - "5269:5269"
+
+  bot:
+    build:
+      context: ./xmpp
+      dockerfile: Dockerfile.bot
+    volumes:
+      - ./core:/home/point/core
+      - ./xmpp:/home/point/xmpp
+    depends_on:
+      - db
+      - redis-cache
+      - redis-storage
+      - redis-queue
+      - redis-pubsub
+      - prosody
 

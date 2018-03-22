@@ -3,11 +3,10 @@ doc
 feed
 img
 imgproc
-postgresql
-redis
 stat
 www
 xmpp
+data
 log
 ssl
 docker-entrypoint-initdb.d/*.sql.gz

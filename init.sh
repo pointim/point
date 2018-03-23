@@ -10,6 +10,7 @@ for repo in core imgproc www xmpp; do
   cd $approot/$repo
   git checkout docker-compose
 done
+cd $approot
 
 mkdir -p img
 mkdir -p data/postgresql

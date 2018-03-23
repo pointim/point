@@ -4,6 +4,13 @@ for i in core doc feed imgproc stat www xmpp; do
   git clone git@github.com:artss/point-$i.git $i
 done
 
+# TODO: remove after merge
+approot=$PWD
+for repo in core imgproc www xmpp; do
+  cd $approot/$repo
+  git checkout docker-compose
+done
+
 mkdir -p img
 mkdir -p data/postgresql
 mkdir -p data/redis/{storage,cache,sessions,queue,pubsub,imgproc}

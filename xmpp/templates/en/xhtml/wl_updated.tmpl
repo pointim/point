@@ -1,0 +1,8 @@
+Whitelist has been updated.<br/>
+{% if added %}
+<b>Added</b>: {{ added|map('login', True)|join(", ")|safe }}.<br/>{% endif %}{% if already %}
+<b>Already in list</b>: {{ already|map('login', True)|join(", ")|safe }}.<br/>{% endif %}{% if denied %}
+<b>Cannot add</b>: {{ denied|map('login', True)|join(", ")|safe }}.<br/>{% endif %}{% if deleted %}
+<b>Deleted</b>: {{ deleted|map('login', True)|join(", ")|safe }}.<br/>{% endif %}{% if not_deleted %}
+<b>Not in list</b>: {{ not_deleted|map('login', True)|join(", ")|safe }}.<br/>{% endif %}{% if not_found %}
+<b>Not found</b>: {{ not_found|map('login', True)|join(", ")|safe }}.{% endif %}

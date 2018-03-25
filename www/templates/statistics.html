@@ -1,0 +1,54 @@
+{% extends "/base.html" %}
+
+{% block extra_head %}
+<style type="text/css">
+    .stat {
+        width: 100%;
+        height: 400px;
+        margin-bottom: 2em;
+    }
+
+    .stat.bar {
+        height: 600px;
+    }
+
+    #stat-blacklisters {
+        display: none;
+    }
+</style>
+<script type="text/javascript" src="/js/underscore-min.js"></script>
+<script type="text/javascript" src="/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="https://code.highcharts.com/highcharts.js"></script>
+<script type="text/javascript" src="/js/stat.js"></script>
+{% endblock %}
+
+{% block title %}Статистика{% endblock %}
+
+{% block subheader %}
+{% endblock %}
+
+{% block content %}
+<h1>Статистика</h1>
+
+<p>
+Немного статистики по пользователям, постам и комментариям.
+</p>
+
+<h2>Неделя</h2>
+
+<div id="stat-posters-weekly" class="stat bar"></div>
+<div id="stat-commenters-weekly" class="stat bar"></div>
+<div id="stat-most-commented-weekly" class="stat bar"></div>
+
+<h2>Месяц</h2>
+
+<div id="stat-avg" class="stat"></div>
+<div id="stat-posts" class="stat"></div>
+<div id="stat-users" class="stat"></div>
+
+<h2>Прочее</h2>
+
+<div id="stat-blacklisted" class="stat bar"></div>
+<div id="stat-blacklisters" class="stat bar"></div>
+
+{% endblock %}

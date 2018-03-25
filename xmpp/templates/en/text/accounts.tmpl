@@ -1,0 +1,5 @@
+Your {% if type=='xmpp' %}IM accounts{% elif type=='email' %}e-mails{% else %}{{type}} accounts{% endif %}: {% for a in accounts %}
+{{a}}{%if a==active %} [active]{% endif %}{% else %}no accounts added yet.{% endfor %}{% if unconfirmed %}
+
+Unconfirmed:{% for a in unconfirmed %}
+{{a}}{% endfor %}{% endif %}

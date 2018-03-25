@@ -1,0 +1,8 @@
+Чорны спіс абноўлены.<br/>
+{% if added %}
+<b>Дадазеныя</b>: {{ added|map('login', True)|join(", ")|safe }}.<br/>{% endif %}{% if already %}
+<b>Ужо ў спісе</b>: {{ already|map('login', True)|join(", ")|safe }}.<br/>{% endif %}{% if denied %}
+<b>Нельга дадаць</b>: {{ denied|map('login', True)|join(", ")|safe }}.<br/>{% endif %}{% if deleted %}
+<b>Выдаленыя</b>: {{ deleted|map('login', True)|join(", ")|safe }}.<br/>{% endif %}{% if not_deleted %}
+<b>Не ў спісе</b>: {{ not_deleted|map('login', True)|join(", ")|safe }}.<br/>{% endif %}{% if not_found %}
+<b>Не знойдзеныя</b>: {{ not_found|map('login', True)|join(", ")|safe }}.{% endif %}

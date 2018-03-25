@@ -1,0 +1,7 @@
+Чорний список оновлено.
+{% if added %}Додані: {{ added|map('login')|join(", ") }}.{% endif %}{% if already %}
+Вже у списку: {{ already|map('login')|join(", ") }}.{% endif %}{% if denied %}
+Не можете додати: {{ denied|map('login')|join(", ") }}.{% endif %}{% if deleted %}
+Видалені: {{ deleted|map('login')|join(", ") }}.{% endif %}{% if not_deleted %}
+Не у списку: {{ not_deleted|map('login')|join(", ") }}.{% endif %}{% if not_found %}
+Не знайдені: {{ not_found|map('login')|join(", ") }}.{% endif %}

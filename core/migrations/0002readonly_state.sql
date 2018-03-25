@@ -1,0 +1,2 @@
+ALTER TABLE posts.posts ADD COLUMN readonly boolean NOT NULL DEFAULT false;
+UPDATE posts.posts SET readonly = TRUE WHERE tags @> ARRAY['readonly']::text[] and created > timestamp '2015-11-02 00:00:00';

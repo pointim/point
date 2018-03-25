@@ -1,0 +1,18 @@
+{% for p in posts %}
+<p style="margin:0">
+{% if p.private %}[асабісты]{% endif %} 
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=@{{p.login}}%20" style="color:#4488ff; font-weight:bold; text-decoration:none;">@{{p.login}}</a> 
+{% for t in p.tags %}
+    <span style="color: #808080">*{{ t }}</span> 
+{% endfor %}
+</p>
+<p style="margin:0">
+{{p.text|xhtmlim|safe}}
+</p>
+<p style="margin:0">Каментарыі: {{p.comments}}</p>
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{p.id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;">#{{p.id}}</a> 
+<a href="https://{{settings.domain}}/{{p.id}}">https://{{settings.domain}}/{{p.id}}</a>
+<br/>
+{% else %}
+{% if posts_count %}Допісы: {{posts_count}}{% else %}Допісы адсутнічаюць{% endif %}
+{% endfor %}

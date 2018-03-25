@@ -1,0 +1,14 @@
+@{{login}}
+
+{% if realname %}Name: {{realname}}
+{% endif %}{% if birthdate %}Birth date: {{birthdate|strftime('%d.%m.%Y')}}
+{% endif %}{% if location %}Location: {{location}}
+{% endif %}{% if homepage %}Home page: {{homepage}}
+{% endif %}{% if xmpp %}Jabber ID: {{xmpp}}
+{% endif %}{% if skype %}Skype: {{skype}}
+{% endif %}{% if icq %}ICQ: {{icq}}
+{% endif %}{% if about %}
+{{about}}
+{% endif %}
+https://{{login|lower}}.{{settings.domain}}/
+{% include "en/text/posts.tmpl" %}

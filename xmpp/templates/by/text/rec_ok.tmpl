@@ -1,0 +1,4 @@
+@{{author}} рэкамендаваў Ваш {% if comment_id %}каментарый #{{post_id}}/{{comment_id}}{% else %}допіс #{{post_id}}{% endif %}{% if text %}:
+{{text}} (#{{post_id}}/{{rcid}})
+https://{{settings.domain}}/{{post_id}}#{{rcid}}{% else %}
+{% if comment_id %}https://{{settings.domain}}/{{post_id}}#{{comment_id}}{% else %}https://{{settings.domain}}/{{post_id}}{% endif %}{% endif %}

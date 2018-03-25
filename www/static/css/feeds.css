@@ -1,0 +1,52 @@
+.aside .feed {
+    display: block;
+    float: left;
+    width: 240px;
+    max-width: 100%;
+    padding: .5em 0 .5em 24px;
+    margin: 0 4px;
+    background: left .5em no-repeat;
+    background-size: 16px 16px;
+    background-image: url("/img/left-menu-feeds.png");
+}
+
+.aside .feed#new-feed {
+    background-image: url("/img/left-menu-new-feed.png");
+    margin-bottom: 1em;
+}
+
+.aside .feed .name {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: none;
+}
+
+.aside .feed .url {
+    clear: both;
+    font-size: .75em;
+    color: #a0a0a0;
+    cursor: default;
+}
+
+.aside-toggle img {
+    width: 24px;
+    height: 24px;
+}
+
+.aside-content {
+    margin: 10px;
+}
+
+#feed-form {
+    margin: 2em 0;
+}
+
+#feed-form #url-input {
+    width: 100%;
+}
+
+#feed-form .buttons {
+    float: right;
+}

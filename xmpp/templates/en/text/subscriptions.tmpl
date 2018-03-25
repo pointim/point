@@ -1,0 +1,15 @@
+{% if subscriptions %}You are subscribed to:
+{% for u in subscriptions %}@{{u.login}}{% if loop.last %}.{% else %}, {% endif %}{% endfor %}{% endif %}{% if subscribers %}
+
+Your readers:
+{% for u in subscribers %}@{{u.login}}{% if loop.last %}.{% else %}, {% endif %}{% endfor %}{% endif %}{% if in_req %}
+
+Incoming subscription requests:
+{% for u in in_req %}@{{u.login}}{% if loop.last %}.{% else %}, {% endif %}{% endfor %}{% endif %}{% if out_req %}
+
+Outgoing subscription requests:
+{% for u in out_req %}@{{u.login}}{% if loop.last %}.{% else %}, {% endif %}{% endfor %}{% endif %}{% if tags %}
+
+Tags:
+{% for tt in tags %}{% for t in tt.tags %}*{{t}}{% if not loop.last %}, {% endif %}{% endfor %}{% if tt.login %} of @{{tt.login}}{% endif %}{% if loop.last %}.{% else %};{% endif %}
+{% endfor %}{% endif %}{% if not subscriptions and not subscribers and not in_req and not out_req and not tags %}You are not subscribed to anyone yet.{% endif %}

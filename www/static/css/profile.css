@@ -1,0 +1,277 @@
+
+#content h1 {
+    margin: 20px 0;
+    padding: 4px 0;
+    border-bottom: solid 1px #f0f0f0;
+}
+
+.saved {
+    color: #008000;
+    margin: 2em 0;
+    padding: 10px;
+    background: #e0fff0;
+    border: solid 1px #c0eec0;
+}
+
+.row {
+    margin: 0 0 1em 0;
+}
+
+.label {
+    padding: 6px 20px 0 0;
+}
+
+@media (min-width: 1024px) {
+    .label {
+        text-align: right;
+    }
+}
+
+@media (min-width: 500px) {
+    .label {
+        float: left;
+        width: 160px;
+    }
+}
+
+.value {
+    max-width: 100%;
+}
+
+@media (min-width: 500px) {
+    .value {
+        margin-left: 180px;
+    }
+}
+
+.value input[type="text"],
+.value input[type="password"],
+.value input[type="date"],
+.value input[type="email"] {
+    width: 400px;
+    max-width: 100%;
+}
+
+.value input[type="radio"],
+.value input[type="checkbox"] {
+    margin: 6px;
+}
+
+.value textarea {
+    width: 500px;
+    max-width: 100%;
+    height: 10em;
+}
+
+.value *[required="required"]:after {
+    content: '*';
+    padding: 6px;
+    color: #f00;
+}
+
+.value label {
+    margin: 6px 2em 0 0;
+}
+
+.descr {
+    margin: .5em;
+    color: #808080;
+    font-style: italic;
+    width: 400px;
+    max-width: 100%;
+}
+
+#avatar-row {
+    overflow: auto;
+}
+
+#avatar-row .avatar {
+    max-width: 80px;
+}
+
+.value .avatar {
+    width: 80px;
+    height: 80px;
+    border: solid 4px #e6e6e6;
+}
+
+.value .avatar > input {
+    width: 80px;
+    height: 80px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+#birthdate-day {
+    width: 3em;
+}
+#birthdate-year {
+    width: 4em;
+}
+
+#cut-input {
+    width: 5em;
+}
+
+.row input[type="submit"] {
+    min-width: 160px;
+    max-width: 100%;
+    margin: 1em 0;
+}
+
+@media (min-width: 500px) {
+    .row input[type="submit"] {
+        margin-left: 180px;
+    }
+}
+
+textarea.csseditor {
+    display: block;
+}
+
+a.preview-link {
+    display: block;
+    float: right;
+    clear: both;
+    text-decoration: none;
+    border-bottom: dashed 1px #35587c;
+}
+
+/** Accounts */
+
+.value .addr-row {
+    max-width: 496px;
+    margin: 0 0 1em 0;
+    clear: both;
+}
+
+.value .addr {
+    margin-right: 96px;
+}
+
+.value .addr-row .addr input {
+    width: 100%;
+    max-width: 400px;
+}
+
+.value .addr-row .buttons {
+    float: right;
+    width: 96px;
+    margin: 0;
+    padding: 0 0 0 6px;
+    box-sizing: border-box;
+}
+
+.value .addr-row input[type="checkbox"],
+.value .addr-row input[type="radio"] {
+    position: absolute;
+    left: -9999px;
+}
+
+.value .addr-row .buttons label {
+    display: block;
+    float: left;
+    width: 32px;
+    height: 32px;
+    margin: .5em 6px;
+    background: transparent center center no-repeat;
+    background-size: 100% 100%;
+    text-align: center;
+    cursor: pointer;
+}
+
+@media (-webkit-max-device-pixel-ratio: 1.5),
+       (-moz-max-device-pixel-ratio: 1.5),
+       (-o-max-device-pixel-ratio: 1.5),
+       (max-device-pixel-ratio: 1.5),
+       (max-resolution: 144dpi) {
+    .value .addr-row {
+        max-width: 472px;
+    }
+
+    .value .addr-row .addr {
+        margin-right: 72px;
+    }
+
+    .value .addr-row .buttons {
+        width: 72px;
+    }
+
+    .value .addr-row .buttons label {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+.value .addr-row .buttons label.del {
+    background-image: url("/img/account-del.png");
+}
+
+.value .addr-row .buttons label.set-active {
+    background-image: url("/img/account-set-active.png");
+}
+
+.value .addr-row .del:checked + .buttons .del {
+    background-image: url("/img/account-del-checked.png");
+}
+.value .addr-row .set-active:checked + .set-active {
+    background-image: url("/img/account-set-active-checked.png");
+}
+
+.value .addr-row .del:checked + .buttons .set-active {
+    display: none;
+}
+
+.value .addr-row.ulogin {
+    margin: .5em 0;
+}
+
+.value .addr-row.ulogin .addr {
+    padding: .5em 0;
+}
+
+.value .addr-row.ulogin a {
+    text-decoration: none;
+}
+
+.remember {
+    margin: 0 1em;
+}
+
+.icon-ulogin {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: .5em;
+    vertical-align: bottom;
+    background-image: url("https://ulogin.ru/img/small7.png");
+}
+.icon-ulogin.vkontakte { background-position: 0 -19px; }
+.icon-ulogin.odnoklassniki { background-position: 0 -42px; }
+.icon-ulogin.mailru { background-position: 0 -65px; }
+.icon-ulogin.facebook { background-position: 0 -88px; }
+.icon-ulogin.twitter { background-position: 0 -111px; }
+.icon-ulogin.google { background-position: 0 -134px; }
+.icon-ulogin.yandex { background-position: 0 -157px; }
+.icon-ulogin.livejournal { background-position: 0 -180px; }
+.icon-ulogin.openid { background-position: 0 -203px; }
+.icon-ulogin.lastfm { background-position: 0 -272px; }
+.icon-ulogin.linkedin { background-position: 0 -295px; }
+.icon-ulogin.liveid { background-position: 0 -318px; }
+.icon-ulogin.steam { background-position: 0 -364px; }
+.icon-ulogin.flickr { background-position: 0 -249px; }
+.icon-ulogin.soundcloud { background-position: 0 -341px; }
+.icon-ulogin.vimeo { background-position: 0 -387px; }
+.icon-ulogin.youtube { background-position: 0 -433px; }
+.icon-ulogin.webmoney { background-position: 0 -410px; }
+.icon-ulogin.forsquare { background-position: 0 -456px; }
+.icon-ulogin.tumblr { background-position: 0 -479px; }
+.icon-ulogin.googleplus { background-position: 0 -502px; }
+
+.value #uLogin {
+    margin: .5em 0;
+}
+

@@ -1,0 +1,11 @@
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=@{{author}}%20" style="color:#4488ff; font-weight:bold; text-decoration:none;">@{{author}}</a> змяніў <a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}/{{comment_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;">#{{post_id}}/{{comment_id}}</a>:<br/>
+<p>
+{{text|xhtmlim|safe}}
+</p>
+<p style="margin:0">
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}/{{comment_id}}%20@{{author}},%20" style="color:#448844; font-weight:bold; text-decoration:none;">#{{post_id}}/{{comment_id}}</a> 
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=u%20%23{{post_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;" title="Адпісацца">[U]</a>
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=!%20%23{{post_id}}/{{comment_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;" title="Рэкамендаваць">[!]</a>
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=~%20%23{{post_id}}/{{comment_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;" title="У закладкі">[~]</a> 
+<a href="https://{{settings.domain}}/{{post_id}}#{{comment_id}}">https://{{settings.domain}}/{{post_id}}#{{comment_id}}</a>
+</p>

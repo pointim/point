@@ -1,0 +1,5 @@
+#!/bin/sh
+
+#redis cache tunnel
+iptables -A INPUT -p tcp -m tcp --dport 16380 -j DROP
+iptables -A INPUT -s 162.213.195.111 -p tcp -m tcp --dport 16380 -j ACCEPT

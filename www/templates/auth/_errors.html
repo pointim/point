@@ -1,0 +1,14 @@
+{% if errors %}
+    <ul class="errors">
+        {% for e in errors %}
+        {% if e=='login-empty' %}<li>Вы не ввели ник.</li>{% endif %}
+        {% if e=='login-invalid' %}<li>Недопустимый ник. Используйте латинские буквы, цифры и знак "-" (дефис).</li>{% endif %}
+        {% if e=='login-in-use' %}<li>Этот ник уже занят.</li>{% endif %}
+        {% if e=='password' %}<li>Вы не ввели пароль.</li>{% endif %}
+        {% if e=='confirm' %}<li>Неверное подтверждение пароля.</li>{% endif %}
+        {% if e=='captcha' %}<li>Неверный текст.</li>{% endif %}
+        {% if e=='recaptcha-fail' %}<li>Не удалось связаться с сервером reCAPTCHA. Повторите попытку позже.</li>{% endif %}
+        {% endfor %}
+        {% if settings.debug %}<!--{{errors}}-->{% endif %}
+    </ul>
+{% endif %}

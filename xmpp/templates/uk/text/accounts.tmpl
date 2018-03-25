@@ -1,0 +1,5 @@
+Ваші {% if type=='xmpp' %}IM-акаунти{% elif type=='email' %}e-mail'и та{% else %}{{type}}-акаунти{% endif %}: {% for a in accounts %}
+{{a}}{%if a==active %} [активний]{% endif %}{% else %}жодного ще не додано.{% endfor %}{% if unconfirmed %}
+
+Непідтверджені:{% for a in unconfirmed %}
+{{a}}{% endfor %}{% endif %}

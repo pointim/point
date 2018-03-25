@@ -1,0 +1,2 @@
+{% if whitelist %}<p><b>Ваш білий список:</b><br/>
+{% for u in whitelist %}<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=@{{u.login}}%20" style="color:#4488ff; font-weight:bold; text-decoration:none;">@{{u.login}}</a>{% if loop.last %}.{% else %}, {% endif %}{% endfor %}</p>{% else %}Ваш білий список порожній.{% endif %}

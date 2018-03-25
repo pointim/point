@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]>    <html class="no-js iem7"> <![endif]-->
+<!--[if (gt IEMobile 7)|!(IEMobile)]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <title>{% block title %}POINT{% endblock %}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="description" content=""/>
+        <meta name="MobileOptimized" content="176"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes"/>
+        <meta name="format-detection" content="telephone=no"/>
+        <meta name="mobile-web-app-capable" content="yes"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+
+        <link rel="shortcut icon" sizes="196x196" href="//i.{{settings.domain}}/icon-196.png"/>
+        <link rel="shortcut icon" sizes="128x128" href="//i.{{settings.domain}}/icon-128.png"/>
+        <link rel="apple-touch-icon" sizes="128x128" href="//i.{{settings.domain}}/icon-128.png"/>
+        <link rel="apple-touch-icon-precomposed" sizes="128x128" href="//i.{{settings.domain}}/icon-128.png"/>
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="//i.{{settings.domain}}/icon-144.png"/>
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="//i.{{settings.domain}}/icon-114.png"/>
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="//i.{{settings.domain}}/icon-72.png"/>
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="//i.{{settings.domain}}/icon-57.png"/>
+
+        <!-- Tile icon for Win8 (144x144 + tile color) -->
+        <meta name="msapplication-TileImage" content="img/touch/apple-touch-icon-144x144-precomposed.png">
+        <meta name="msapplication-TileColor" content="#222222">
+
+
+        <link rel="stylesheet" href="//{{settings.domain}}/css/normalize.css">
+        <link rel="stylesheet" href="//{{settings.domain}}/css/main.css?1">
+        <link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/magnific-popup.css"/>
+        <!--[if IE]>
+        <style>
+            body {font-size:13px}
+        </style>
+        <![endif]-->
+        <!--<script src="//{{settings.domain}}/js/modernizr-2.6.2.min.js"></script>-->
+        <script src="//{{settings.domain}}/js/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="//{{settings.domain}}/js/jquery.magnific-popup.min.js"></script>
+        <script src="//{{settings.domain}}/js/blog.js?1"></script>
+        <script type="text/javascript" src="//{{settings.domain}}/js/tooltip.js"></script>
+        <link rel="icon" type="image/png" href="//{{settings.domain}}/img/favicon.png"/>
+
+        {% block extra_head %}{% endblock %}
+        <link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/tooltip.css"/>
+        <script src="//{{settings.domain}}/js/scrolltotop.js"></script>
+        <link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/topbutton.css"/>
+        <link id="usercss-link" rel="stylesheet" type="text/css" href="{{ env.request.protocol }}{{settings.usercss_root}}/{{env.user.login}}.css"/>
+    </head>
+    <body>
+        {% set unread_posts = env.user.unread_posts_count('post') %}
+        {% set unread_comments = env.user.unread_comments_count('post') %}
+        {% set unread_private_posts = env.user.unread_posts_count('private') %}
+        {% set unread_private_comments = env.user.unread_comments_count('private') %}
+
+        <div id="header-wrap">
+            <div id="header">
+                <a id="logo"{% if not env.user.id %} class="visible"{% endif %} href="//{{settings.domain}}"><img src="/img/logo.png" alt="point.im"/></a>
+                {% if env.user.id %}
+                <label id="user-menu-label" for="user-menu-cb">
+                    <img class="avatar" src="{% if env.user.avatar %}{{ env.request.protocol }}{{ settings.avatars_root }}/24/{{env.user.avatar}}{% else %}/img/a/av24.png{% endif %}" alt="@{{env.user.login}}"/>
+                    <div id="name">
+                        <h1>{{ env.user.login }}</h1>
+                        <span>{{ env.user.get_info('name') }}</span>
+                    </div>
+                </label>
+                <input type="checkbox" id="user-menu-cb" autocomplete="off"/>
+                <div id="user-menu">
+                    <label id="user-menu-hide-label" for="user-menu-cb"></label>
+                    <div id="sections-menu">
+                        <a id="menu-recent"{% if section in ['recent_all', 'recent_posts', 'feeds'] and env.user==env.owner %} class="active"{% endif %} href="//{{env.user.login|lower}}.{{settings.domain}}/recent">
+                            Лента
+                            {% if unread_posts %}<span class="unread">{{unread_posts}}</span>{% endif %}
+                        </a>
+                        <a id="menu-blog"{% if section=='blog' and env.user==env.owner %} class="active"{% endif %} href="//{{env.user.login|lower}}.{{settings.domain}}/">Блог</a>
+                        {#<a id="menu-feeds"{% if section=='feeds' %} class="active"{% endif %} href="//{{env.user.login|lower}}.{{settings.domain}}/feeds">Фиды</>#}
+                        <a id="menu-comments"{% if section=='comments' %} class="active"{% endif %} href="//{{env.user.login|lower}}.{{settings.domain}}/comments{% if unread_comments %}/unread{% endif %}">
+                            Комментарии
+                            {% if unread_comments %}<span class="unread">{{ unread_comments }}</span>{% endif %}
+                        </a>
+                        <a id="menu-messages"{% if section=='messages' %} class="active"{% endif %} href="//{{env.user.login|lower}}.{{settings.domain}}/messages">
+                            Сообщения
+                            {% if unread_private_posts %}
+                            <span class="unread">{{unread_private_posts}}
+                                {% if unread_private_comments %}<span class="unread-comments">+{{unread_private_comments}}</span>{% endif %}
+                            </span>
+                            {% elif unread_private_comments %}
+                            <span class="unread unread-comments">{{unread_private_comments}}</span>
+                            {% endif %}
+                        </a>
+                        <a id="menu-bookmarks"{% if section=='bookmarks' %} class="active"{% endif %} href="//{{env.user.login|lower}}.{{settings.domain}}/bookmarks">Закладки</a>
+                    </div>
+                    <a id="menu-profile" href="//{{env.user.login|lower}}.{{settings.domain}}/profile">Профиль</a>
+                    <a id="menu-logout" href="//{{env.user.login|lower}}.{{settings.domain}}/logout?csrf_token={{csrf_token()}}">Выйти</a>
+                </div>
+                <label id="user-menu-hide-back-label" for="user-menu-cb"></label>
+
+                <label id="new-post-label" for="new-post-cb" title="Новый пост"></label>
+
+                <!--<label id="search-label" for="search-cb" title="Поиск"></label>
+                <input type="checkbox" id="search-cb"/>
+                <form class="search-form" action="//{{settings.domain}}/search">
+                    <input type="submit" value=""/>
+                    <div>
+                        <input type="text" name="text" value="{{ search_text }}" placeholder="Поиск"/>
+                    </div>
+                    <label id="search-hide-label" for="search-cb"></label>
+                </form>-->
+
+                {% else %}
+                <div id="login-menu">
+                    <a id="menu-login" href="//{{settings.domain}}/login" title="Войти"></a>
+                    <a id="menu-register" href="//{{settings.domain}}/register" title="Зарегистрироваться"></a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div id="subheader-wrap">
+            <div id="subheader">
+                {% block subheader %}{% endblock %}
+            </div>
+        </div>
+
+        <div id="main-wrap" class="clearfix">
+            <div id="main">
+                {% block left_menu %}
+                <div id="left-menu">
+                    {% if env.user.id %}
+                        <h3 id="left-menu-my">Моё</h3>
+                        <a id="menu-recent"{% if section in ['recent_all', 'recent_posts', 'feeds'] and env.user==env.owner %} class="active"{% endif %} href="//{{env.user.login|lower}}.{{settings.domain}}/recent">
+                            Лента
+                            {% if unread_posts %}<span class="unread">{{unread_posts}}</span>{% endif %}
+                        </a>
+                        <a id="menu-blog"{% if section=='blog' and env.user==env.owner %} class="active"{% endif %} href="//{{env.user.login|lower}}.{{settings.domain}}/">Блог</a>
+                        <a id="menu-comments"{% if section=='comments' %} class="active"{% endif %}  href="//{{env.user.login|lower}}.{{settings.domain}}/comments{% if unread_comments %}/unread{% endif %}">
+                            Комментарии
+                            {% if unread_comments %}<span class="unread">{{ unread_comments }}</span>{% endif %}
+                        </a>
+                        <a id="menu-messages"{% if section=='messages' %} class="active"{% endif %} href="//{{env.user.login|lower}}.{{settings.domain}}/messages">
+                            Сообщения
+                            {% if unread_private_posts %}
+                            <span class="unread">{{unread_private_posts}}
+                                {% if unread_private_comments %}<span class="unread-comments">+{{unread_private_comments}}</span>{% endif %}
+                            </span>
+                            {% elif unread_private_comments %}
+                            <span class="unread unread-comments">{{unread_private_comments}}</span>
+                            {% endif %}
+                        </a>
+                        <a id="menu-bookmarks"{% if section=='bookmarks' %} class="active"{% endif %} href="//{{env.user.login|lower}}.{{settings.domain}}/bookmarks">Закладки</a>
+
+                        {% if False and section != 'feeds' and env.user.id==1 %}
+                        <h3 id="left-menu-feeds"><a href="//{{env.user.login|lower}}.{{settings.domain}}/feeds">Фиды</a></h3>
+                        {% set feeds = env.user.subscriptions('feed') %}
+                        {% for feed in feeds|shuffle(10) %}
+                        <a class="left-menu-feed" href="//{{feed.login|lower}}.{{settings.domain}}/">{{feed.info.name or feed.login}}</a>
+                        {% endfor %}
+                        <a class="left-menu-feed" id="left-menu-new-feed" href="//{{env.user.login|lower}}.{{settings.domain}}/feeds/add">Добавить фид</a>
+                        {% if feeds|count > 2 %}
+                        <a class="more" href="//{{env.user.login|lower}}.{{settings.domain}}/feeds">все фиды</a>
+                        {% endif %}
+                        {% endif %}
+
+                    {% else %}
+                        <a id="menu-login" href="//{{settings.domain}}/login">Войти</a>
+                        <a id="menu-register" href="//{{settings.domain}}/register">Зарегистрироваться</a>
+                    {% endif %}
+                </div>
+                {% endblock %}
+
+                <input type="checkbox" id="aside-toggle-cb" autocomplete="off"/>
+                {% block aside %}{% endblock %}
+
+                <div id="content">
+                    <div class="content-wrap">
+                        {% block content %}{% endblock %}
+                    </div>
+                </div>
+                <a class="totophidden totophide" href="#" title="Наверх" id="scrollToTop">&#11014;</a>
+            </div>
+        </div>
+
+        <div id="footer">
+            <div id="menu">
+                <div>
+                    <a href="//{{settings.domain}}/about">О проекте</a>
+                    {#<a href="//{{settings.domain}}/blog">Блог</a>#}
+                    <a href="//{{settings.domain}}/tos">Правила</a>
+                    <a href="//{{settings.domain}}/donate">Добро</a>
+                </div>
+                <div>
+                    <a href="//{{settings.domain}}/help/">Справка</a>
+                    <a href="//{{settings.domain}}/help/apps">Приложения</a>
+                    <a href="//{{settings.domain}}/help/commands">Команды</a>
+                    <a href="//{{settings.domain}}/help/api">API</a>
+                    <a href="//{{settings.domain}}/help/markdown">Markdown</a>
+                </div>
+                <div>
+                    <a href="//{{settings.domain}}/contacts">Контакты</a>
+                    <a href="//{{settings.domain}}/statistics">Статистика</a>
+                    <a href="//bitbucket.org/arts/point-issues">Сообщить об ошибке</a>
+                </div>
+                {% if env.user.id %}
+                <div class="secret">
+                    <a href="//{{settings.domain}}/all">Всё подряд</a>
+                </div>
+                {% endif %}
+            </div>
+            <div id="copyright">
+                &copy; 2010&ndash;{{ __now__|strftime('%Y') }} Point.im&nbsp;team
+            </div>
+        </div>
+        {% block templates %}{% endblock %}
+
+        <input type="checkbox" id="new-post-cb" autocomplete="off"/>
+        <div id="new-post-wrap">
+            <form id="new-post-form" class="post-form" action="/post" method="post" enctype="multipart/form-data" autocomplete="off">
+                <h1>Добавить пост</h1>
+                <input type="checkbox" name="private" id="new-post-private-cb"/>
+                <label id="new-post-private-label" for="new-post-private-cb">Приватный</label>
+                <textarea id="text-input" name="text" placeholder="Текст">{% if env.owner and env.owner.id != env.user.id and env.owner.login %}@{{env.owner.login}}, {% endif %}</textarea>
+                <textarea id="tags-input" name="tags" placeholder="Теги (разделяются запятыми)"></textarea>
+                <input type="hidden" name="csrf_token" value="{{csrf_token()}}"/>
+                <div class="attach">
+                    <input type="file" name="attach" multiple/>
+                    <div class="descr">Вы можете выбрать до 10 файлов общим размером не более 10 МБ.</div>
+                </div>
+                <div class="buttons">
+                    <label id="new-post-hide-label" for="new-post-cb">Отменить</label>
+                    <input type="submit" value="Создать"/>
+                </div>
+                <div class="footnote">
+                    Для форматирования текста используется <a href="//{{settings.domain}}/help/markdown">Markdown</a>.
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

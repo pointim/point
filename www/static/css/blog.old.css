@@ -1,0 +1,705 @@
+#content {
+    position: relative;
+    padding-bottom: 5em;
+}
+
+#user-info {
+    padding: 10px;
+}
+
+#user-info > div.info {
+    margin-left: 100px;
+}
+
+img.avatar {
+    border: solid 4px #f8f8f8;
+    float: left;
+    margin-right: 10px;
+    color: #f8f8f8;
+}
+
+#user-info div.avatar {
+    float: left;
+}
+
+#user-info img.avatar {
+    width: 80px;
+    height: 80px;
+    float: none;
+    box-shadow: 0 0 10px rgba(0,0,0,.1);
+}
+
+#user-info h1 {
+    color: #35587c;
+}
+
+#user-info div#name {
+    color: #808080;
+    text-shadow: rgba(255,255,255,.75) 1px 1px 0;
+}
+
+#user-info #about {
+    color: #666666;
+    text-shadow: rgba(255,255,255,.75) 1px 1px 0;
+    margin: 1em 0;
+    min-height: 2em;
+}
+
+#user-info #counters {
+    box-sizing: border-box;
+    clear: both;
+    /*margin: 3em 0;*/
+    padding: 10px;
+    text-align: justify;
+}
+
+#user-info #counters:after {
+    content: "";
+    display: inline-block;
+    width: 100%;
+}
+
+#user-info #sub {
+    margin: 2em 0 2em 100px;
+}
+
+#user-info #sub a {
+    display: block;
+    margin: .5em 0;
+    text-decoration: none;
+}
+
+#user-info #tags {
+    text-align: justify;
+}
+
+#user-info #tags a {
+    margin-right: .5em;
+    text-decoration: none;
+    text-shadow: rgba(255,255,255,.75) 1px 1px 0;
+}
+
+#user-info #counters > * {
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    padding: 0;
+    line-height: 2em;
+}
+
+#user-info #counters > * .value {
+    display: block;
+    clear: both;
+    font-size: 3em;
+    padding-top: .25em;
+    text-shadow: rgba(255,255,255,.75) 1px 1px 0;
+}
+
+#user-info #counters > * .units {
+    display: block;
+    clear: both;
+    font-size: .9em;
+    color: #a0a0a0;
+    text-shadow: rgba(255,255,255,.75) 1px 1px 0;
+}
+
+#user-info #counters > #subs .value { color: #35587c; }
+#user-info #counters > #readers .value { color: #35587c; }
+#user-info #counters > #posts .value { color: #808080; }
+#user-info #counters > #comments .value { color: #a0a0a0; }
+
+#user-info .buttons {
+    margin: 5px 5px;
+}
+
+#user-info .buttons a {
+    text-decoration: none;
+    padding: 0.2em 0.5em;
+    margin: 0 0.2em;
+    color: #cacaca;
+    border-radius: 3px;
+}
+
+.post {
+    position: relative;
+    margin: 0;
+    float: left;
+    clear: both;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    padding-bottom: 10px;
+    border-bottom: solid 1px #f0f0f0;
+    overflow: visible;
+}
+
+.post.private {
+}
+
+.post.private .post-id:before {
+    content: 'P';
+    font-size: .8em;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #f0f0f0;
+    padding: .25em .5em;;
+    margin-right: .5em;
+    border-radius: 3px;
+}
+
+.post .info {
+    float: left;
+}
+
+.post > .post-content > .author {
+    display: block;
+    margin-bottom: 0.25em;
+}
+
+.post > .post-content > .author > .to {
+    font-weight: normal;
+}
+
+.post .author .comment-id {
+    color: #a0a0a0;
+    padding: 0 .5em;
+}
+
+.post .user.rcmd::before {
+    /*padding-left: 24px;*/
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    background: transparent url("https://i.point.im/btn-recommend.png") left center no-repeat;
+    background-size: 16px 16px;
+}
+
+.post .info img.avatar {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 4px;
+}
+
+.post .info div {
+    float: left;
+}
+
+.post .info .created {
+    width: 42px;
+    color: #a0a0a0;
+    font-size: .75em;
+    display: block;
+    float: left;
+    clear: both;
+    text-align: right;
+    line-height: 1em;
+}
+
+.post .post-content {
+    margin-left: 60px;
+}
+
+.post .rtext, .post .btext {
+    color: #808080;
+    font-style: italic;
+}
+
+.post .text {
+    /*clear: both;*/
+    margin-bottom: 1em;
+    /*max-height: 25em;*/
+    /*overflow: hidden;*/
+}
+
+#comments .post .text {
+    max-height: none;
+    overflow: visible;
+}
+
+.post .text.expanded {
+    max-height: none;
+    overflow: visible;
+}
+
+.post .tags {
+    float: left;
+    color: #a0a0a0;
+    margin: 0.5em 0;
+}
+
+.post .tags a {
+    color: inherit;
+    /*text-decoration: none;*/
+}
+
+.post .rec-users {
+    clear: both;
+}
+
+.post .text img {
+    max-width: 400px;
+    max-height: 300px;
+}
+
+.post .more-links {
+    display: none;
+    clear: both;
+}
+
+.post .more-links .less {
+    display: none;
+}
+
+.post .post-id {
+    float: left;
+    clear: left;
+    color: #a0a0a0;
+}
+
+.post .post-id a {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #35587c;
+    text-decoration: none;
+}
+
+.post.recommendation .post-id:before {
+    content: '!';
+    font-weight: bold;
+    margin-right: .5em;
+    padding: 0 .5em;
+    background: #f0f0f0;
+    border-radius: 3px;
+}
+
+.post .post-id span {
+    font-weight: normal;
+    margin: 0 .5em;
+    padding: 0 .25em;
+    color: #808080;
+    background: #f0f0f0;
+}
+
+.post .buttons {
+    float: right;
+}
+
+.post .buttons a,
+.post .edit-buttons a {
+    display: block;
+    float: left;
+    margin: 0 0 0 .5em;
+    min-width: 16px;
+    height: 16px;
+    background: 3px 3px no-repeat;
+    background-size: 16px 16px;
+    color: #a0a0a0;
+    text-decoration: none;
+    padding: 3px;
+}
+
+@media (max-width: 640px) {
+    .post .buttons a.active {
+        border-radius: 3px;
+        background-color: #f0f0f0;
+    }
+}
+
+.post .edit-buttons {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.post#top-post .edit-buttons {
+    top: 10px;
+    right: 10px;
+}
+
+.post .edit-buttons .edit {
+    background-image: url("https://i.point.im/btn-edit.png");
+}
+
+.post .edit-buttons .del {
+    background-image: url("https://i.point.im/btn-del.png");
+}
+
+.post#top-post .text {
+    max-height: none;
+    overflow: visible;
+}
+
+.post .buttons a span.label {
+    display: none;
+}
+
+.post .buttons a .count {
+    margin-left: 20px;
+    background: #f0f0f0;
+    color: #a0a0a0;
+    padding: 0 .25em;
+    border-radius: 3px;
+}
+
+@media (max-width: 640px) {
+    .post .buttons a .count {
+        font-size: .9em;
+        vertical-align: sub;
+    }
+}
+
+@media (-webkit-min-device-pixel-ratio: 1.5), /* Webkit-based browsers */
+       (min--moz-device-pixel-ratio: 1.5),    /* Older Firefox browsers (prior to Firefox 16) */
+       (min-resolution: 1.5dppx) {
+    .post .buttons a, .post .del {
+        min-width: 24px;
+        min-height: 24px;
+        background-size: 24px 24px;
+    }
+
+    .post .buttons a .count {
+        margin-left: 30px;
+    }
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), /* Webkit-based browsers */
+       (min--moz-device-pixel-ratio: 2),    /* Older Firefox browsers (prior to Firefox 16) */
+       (min-resolution: 2dppx) {
+    .post .buttons a, .post .del {
+        min-width: 32px;
+        min-height: 32px;
+        background-size: 32px 32px;
+    }
+
+    .post .buttons a .count {
+        margin-left: 40px;
+    }
+}
+
+.post .buttons a.reply { background-image: url("https://i.point.im/btn-reply.png"); }
+.post .buttons a.recommend { background-image: url("https://i.point.im/btn-recommend.png"); }
+.post .buttons a.recommend-inactive { background-image: url("https://i.point.im/btn-recommend-inactive.png"); color: #d0d0d0; }
+.post .buttons a.bookmark { background-image: url("https://i.point.im/btn-del.png"); }
+.post .buttons a.subscribe { background-image: url("https://i.point.im/btn-subscribe.png"); }
+
+@media (min-width: 640px) {
+    .post .buttons a {
+        width: auto;
+        background-image: none !important;
+    }
+
+    .post .buttons a span.label {
+        display: inline;
+    }
+
+    .post .buttons a .count {
+        margin-left: .25em;
+    }
+}
+
+.reply-form {
+    display: none;
+    float: left;
+    clear: both;
+    box-sizing: border-box;
+    width: 100%;
+    padding-left: 50px;
+}
+
+.recommendation-form {
+    display: none;
+    float: left;
+    clear: both;
+    box-sizing: border-box;
+    width: 100%;
+    padding-left: 50px;
+}
+
+@media (max-width: 800px) {
+    .recommendation-form {
+        padding-left: 0;
+    }
+
+    .reply-form {
+        padding-left: 0;
+    }
+}
+
+.reply-form > div,
+.recommendation-form > div {
+    position: relative;
+    box-sizing: border-box;
+    padding: 4px 0 4px 10px;
+    margin-top: 10px;
+    background: #ffffff;
+    border: solid 1px #f0f0f0;
+}
+
+.reply-form > div > div,
+.recommendation-form > div > div {
+    /*margin-right: 60px;*/
+}
+
+.reply-form > div input[type="text"],
+.recommendation-form > div input[type="text"] {
+    height: 2em;
+}
+
+.reply-form > div > input[type="submit"],
+.recommendation-form > div > input[type="submit"] {
+    display: none;
+}
+
+/*@media handheld {*/
+    .reply-form > div > div,
+    .recommendation-form > div > div {
+        margin-right: 40px;
+    }
+
+    .reply-form > div input[type="text"],
+    .recommendation-form > div input[type="text"] {
+        margin: 10px 0;
+    }
+
+    .reply-form > div > input[type="submit"],
+    .recommendation-form > div > input[type="submit"] {
+        display: block;
+        float: right;
+        width: 32px;
+        height: 2em;
+        border: 0;
+        padding: 0;
+        background: transparent url("https://i.point.im/reply-bg.png") center center no-repeat;
+        background-size: 16px 16px;
+        box-shadow: none;
+    }
+/*}*/
+
+@media (-webkit-min-device-pixel-ratio: 1.5), /* Webkit-based browsers */
+       (min--moz-device-pixel-ratio: 1.5),    /* Older Firefox browsers (prior to Firefox 16) */
+       (min-resolution: 1.5dppx) {
+    .reply-form > div > input[type="submit"],
+    .recommendation-form > div > input[type="submit"] {
+        background-size: 24px 24px;
+    }
+}
+
+.reply-form > div > img,
+.recommendation-form > div > img {
+    position: absolute;
+    top: -8px;
+    right: 0;
+    width: 15px;
+    height: 8px;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+}
+
+.reply-form p,
+.recommendation-form p {
+    font-size: .8em;
+    color: #808080;
+    margin: 0;
+}
+
+#post-reply form {
+    display: block;
+}
+
+#post-reply form > div {
+    overflow: auto;
+}
+
+#new-post-form .text {
+    padding: 4px;
+    max-height: auto;
+    overflow: visible;
+}
+
+#new-post-form .text #text-input,
+#new-post-form .text #tags-input {
+    margin: 0;
+    display: block;
+}
+
+#new-post-form .text #text-input {
+    height: 6em;
+}
+
+#new-post-form .text #tags-input {
+    height: 2.5em;
+    border-top: 0;
+}
+
+#new-post-form input[type="submit"] {
+    float: right;
+    margin: .5em 0;
+}
+
+#new-post-form label {
+    float: left;
+    padding: .75em 0;
+}
+
+@media (max-width: 800px) {
+    #new-post-form .info {
+        display: none;
+    }
+
+    #new-post-form .post-content {
+        margin-left: 0;
+    }
+}
+
+#pager {
+    padding: 10px;
+    overflow: auto;
+}
+
+#pager a {
+    display: block;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 1.5em;
+    text-decoration: none;
+    padding: 1em;
+}
+
+#pager #newer {
+    display: block;
+    float: left;
+}
+
+#pager #older {
+    display: block;
+    float: right;
+}
+
+#pager #more {
+    display: none;
+    width: 100%;
+}
+
+#pager #more.visible {
+    display: block;
+}
+
+#pager #more.loading {
+    color: #a0a0a0;
+}
+
+.errors {
+    margin: 10px;
+}
+
+.no-posts {
+    margin: 2em;
+    text-align: center;
+}
+
+.note {
+    font-style: italic;
+    color: #808080;
+    display: inline-block;
+    padding: 1.25em .5em;
+}
+
+.post .user-wrap {
+    position: relative;
+}
+
+.user-balloon {
+    display: none;
+    position: absolute;
+    left: -63px;
+    top: -7px;
+    z-index: 1;
+    width: 220px;
+    background: rgba(255,255,255,.9);
+    /*border: solid 1px #d0d0d0;*/
+    box-shadow: 0 2px 10px rgba(0,0,0,.25);
+    padding: 5px;
+}
+
+@-webkit-keyframes fadeIn {
+    from { opacity: 0; }
+      to { opacity: 1; }
+}
+
+@-moz-keyframes fadeIn {
+    from { opacity: 0; }
+      to { opacity: 1; }
+}
+
+@-ms-keyframes fadeIn {
+    from { opacity: 0; }
+      to { opacity: 1; }
+}
+
+.post .user-wrap:hover .user-balloon {
+    display: block;
+    z-index: 3;
+    /*transition: opacity .25s ease-in-out;*/
+    /*visibility: visible;*/
+    /*opacity: 1;*/
+    animation: fadeIn .25s;
+    -webkit-animation: fadeIn .25s;
+    -moz-animation: fadeIn .25s;
+}
+
+.post .user-balloon .avatar,
+#comments .post .user-balloon .avatar {
+    width: 40px;
+    height: 40px;
+    float: left;
+    margin-left: 0;
+}
+
+.post .user-balloon .ub-info {
+    margin-left: 50px;
+    color: #404040;
+    font-weight: normal;
+    padding-left: 8px;
+}
+
+.user-balloon .ub-info a.login {
+    font-size: 1em;
+    font-weight: bold;
+    color: #35587C;
+    text-decoration: none;
+    margin: -2px 0;
+    line-height: 1em;
+    white-space: nowrap;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-balloon .ub-info span {
+    display: block;
+    font-size: .9em;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /*text-shadow: rgba(255, 255, 255, .5) 1px 1px 0;*/
+}
+
+.user-balloon .ub-info p {
+    margin: 0;
+    color: #a0a0a0;
+    font-size: .9em;
+    line-height: 1.2em;
+}
+
+.user-balloon .ub-info .sub {
+}
+
+.user-balloon .ub-info .sub a {
+    display: block;
+    font-size: .9em;
+    line-height: 1em;
+    margin: .5em 0;
+}

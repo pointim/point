@@ -1,0 +1,10 @@
+{% extends "/base.html" %}
+
+{% block content %}
+    <div class="err50x code">{{ code }}</div>
+    <div class="err50x">
+        <p>{{ message }}</p>
+        <p>На сервере произошла ошибка. Не пугайтесь: сервис ещё в разработке, такое бывает. Арц уже получил уведомление и бежит разбираться с проблемой, роняя тапки.</p>
+        <img src="/img/_bug.jpg" alt="500"/>
+    </div>
+{% endblock %}

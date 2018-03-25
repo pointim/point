@@ -1,0 +1,12 @@
+<p>Вашыя {% if type=='xmpp' %}IM-акаўнты{% elif type=='email' %}адрасы электроннай пошты{% else %}{{type}}-акаўнты{% endif %}:</p>
+{% for a in accounts %}
+{{a}} <a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=set%20{{type}}%20-{{a}}" style="color:#448844; font-weight:bold; text-decoration:none;" title="Выдаліць">[ - ]</a>{% if a==active %}<i style="color:#808080">актыўны</i>{% endif %}<br/>
+{% else %}
+<i>ніводны не дададзены.</i>
+{% endfor %}
+{% if unconfirmed %}
+<p>Непацверджаныя:</p>
+{% for a in unconfirmed %}
+{{a}} <a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=set%20{{type}}%20-{{a}}" style="color:#448844; font-weight:bold; text-decoration:none;" title="Выдаліць">[ - ]</a>{% if a==active %}<i style="color:#808080">актыўны</i>{% endif %}<br/>
+{% endfor %}
+{% endif %}

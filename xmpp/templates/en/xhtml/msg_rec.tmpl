@@ -1,0 +1,23 @@
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=@{{author}}%20" style="color:#4488ff; font-weight:bold; text-decoration:none;">@{{author}}</a> recommends: {{text or ''}}<br/>
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=@{{post_author}}%20" style="color:#4488ff; font-weight:bold; text-decoration:none;">@{{post_author}}</a><br/>
+<p style="margin:0">
+{% for t in tags %}
+    <span style="color: #808080">*{{ t }}</span>
+{% endfor %}</p>
+{% if title %}<h4 style="color:#808080;font-weight:bold;">{% if author_name %}<span style="font-weight:normal">{{author_name}}</span><br/>{% endif %}{{title}}</h4>{% else %}<br/>{% endif %}
+<p style="margin:0">
+{{post_text|xhtmlim|safe}}
+</p>
+{% if link %}<p><a href="{{link}}">{{link|short}}</a></p>{% endif %}
+{% if files %}
+<p>
+{% for f in files %}
+<a href="http{{settings.media_root}}/{{f}}">{{f|basename}}</a><br/>
+{% endfor %}
+</p>
+{% endif %}
+{% if comments %}<p style="margin:0">{{comments}} comments</p>{% endif %}
+<p style="margin:0">
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}{% if comment_id %}%2f{{comment_id}}{% endif %}%20" style="color:#448844; font-weight:bold; text-decoration:none;">#{{post_id}}{% if comment_id %}/{{comment_id}}{% endif %}</a>
+<a href="https://{{settings.domain}}/{{post_id}}{% if comment_id %}#{{comment_id}}{% endif %}">https://{{settings.domain}}/{{post_id}}{% if comment_id %}#{{comment_id}}{% endif %}</a>
+</p>

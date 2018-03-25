@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes, target-densitydpi=device-dpi"/>
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="MobileOptimized" content="176" />
+
+        <title>{% block title %}Point.im{% endblock %}</title>
+
+        <link rel="icon" type="image/png" href="https://{{settings.domain}}/img/favicon.png"/>
+        <link rel="stylesheet" type="text/css" href="https://{{settings.domain}}/css/default.css"/>
+        <script type="text/javascript">
+            var settings = {
+                domain: '{{settings.domain}}',
+            };
+        </script>
+        <script type="text/javascript" src="https://{{settings.domain}}/js/jquery.min.js"></script>
+        <script type="text/javascript" src="https://{{settings.domain}}/js/strftime.min.js"></script>
+        <script type="text/javascript" src="https://{{settings.domain}}/js/util.js"></script>
+
+        {% block extra_head %}{% endblock %}
+
+        {% if env.user.id and env.user.get_profile('www.usercss') %}
+        <link id="usercss-link" rel="stylesheet" type="text/css" href="{{settings.usercss_root}}/{{env.user.get_profile('www.usercss')}}"/>
+        {% endif %}
+    </head>
+    <body>
+        <div id="header">
+            <div id="user-menu">
+                {% if env.user.id %}
+                <div id="user-menu-btn">
+                    <img src="{% if env.user.avatar %}{{ settings.avatars_root }}/40/{{env.user.avatar}}{% else %}/img/av40.png{% endif %}" alt="@arts"/>
+                    <div id="name">
+                        <h1>{{ env.user.login }}</h1>
+                        <span>{{ env.user.get_info('name') }}</span>
+                    </div>
+                </div>
+                {#<a id="menu-new-post"{% if section=='new_post'%} class="active"{% endif %} href="https://{{env.user.login}}.{{settings.domain}}/new" alt="Новый пост" title="Новый пост"><span>Новый пост</span></a>#}
+                <a id="menu-blog"{% if section=='blog'%} class="active"{% endif %} href="https://{{env.user.login}}.{{settings.domain}}/blog" alt="Блог" title="Блог"><span>Блог</span></a>
+                <a id="menu-recent"{% if section=='recent'%} class="active"{% endif %} href="https://{{env.user.login}}.{{settings.domain}}/" alt="Новое" title="Новое"><span>Новое</span></a>
+                <a id="menu-bookmarks"{% if section=='bookmarks'%} class="active"{% endif %} href="https://{{env.user.login}}.{{settings.domain}}/bookmarks" alt="Закладки" title="Закладки"><span>Закладки</span></a>
+                <a id="menu-comments"{% if section=='comments'%} class="active"{% endif %} href="https://{{env.user.login}}.{{settings.domain}}/comments" alt="Комментарии" title="Комментарии"><span>Комментарии</span></a>
+                <a id="menu-messages"{% if section=='messages'%} class="active"{% endif %} href="https://{{env.user.login}}.{{settings.domain}}/messages" alt="Сообщения" title="Сообщения"><span>Сообщения</span></a>
+                <a id="menu-profile"{% if section=='profile'%} class="active"{% endif %} href="https://{{env.user.login}}.{{settings.domain}}/profile" alt="Профить" title="Профиль"><span>Профиль</span></a>
+                <a id="menu-logout" href="https://{{settings.domain}}/logout?csrf_token={{csrf_token()}}" alt="Выйти" title="Выйти"><span>Выйти</span></a>
+                </ul>
+                {% else %}
+                <a id="menu-login" href="https://{{settings.domain}}/login" title="Войти"><span>Войти</span></a>
+                {% endif %}
+            </div>
+        </div>
+        <div id="wrap">
+            {% block aside %}{% endblock %}
+            <div id="content"><div>
+            {% block content %}{% endblock %}
+            </div></div>
+        </div>
+        <div id="footer">
+            <div id="menu">
+                <div>
+                    <a href="https://{{settings.domain}}/about">О проекте</a>
+                    <a href="https://{{settings.domain}}/blog">Блог</a>
+                    <a href="https://{{settings.domain}}/tos">Условия</a>
+                    <a href="https://{{settings.domain}}/donate">Donate</a>
+                </div>
+                <div>
+                    <a href="https://{{settings.domain}}/help/">Помощь</a>
+                    <a href="https://{{settings.domain}}/help/apps">Приложения</a>
+                    <a href="https://{{settings.domain}}/help/commands">Команды</a>
+                    <a href="https://{{settings.domain}}/help/api">API</a>
+                </div>
+                <div>
+                    <a href="https://{{settings.domain}}/contacts">Контакты</a>
+                    <a href="https://bitbucket.org/arts/point-issues">Сообщить об ошибке</a>
+                </div>
+            </div>
+            <div id="copyright">
+                &copy; 2012 Point.im
+            </div>
+        </div>
+        {% block templates %}{% endblock %}
+    </body>
+</html>
+

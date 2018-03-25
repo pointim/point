@@ -1,0 +1,89 @@
+.aside {
+    padding: 10px;
+}
+
+.aside-toggle h1 {
+    margin: 0;
+}
+
+/*#content h1 { font-weight: normal; font-size: 1.8em; line-height: 1; margin-top: 0; margin-bottom: 0.5em; }
+#content h2 { font-weight: normal; font-size: 1.6em; line-height: 1; margin-top: 0; margin-bottom: 0.5em; }
+#content h3 { font-weight: normal; font-size: 1.4em; line-height: 1; margin-top: 0; margin-bottom: 0.5em; }
+#content h4 { font-weight: normal; font-size: 1.2em; line-height: 1; margin-top: 0; margin-bottom: 0.5em; }*/
+#content h1, #content h2, #content h3 {
+    margin: 2em 0 1em 0;
+    padding: 1em 0 .5em 0;
+    border-top: solid 1px #eeeeee;
+}
+
+#content h1:first-child,
+#content h2:first-of-type,
+#content h3:first-of-type {
+    margin: .5em 0 1em 0;
+    padding: .5em 0;
+    border-top: 0;
+}
+
+#content h1 + h2,
+#content h1 + h3,
+#content h2 + h3 {
+    border-top: 0;
+    margin: 0 0 1em 0;
+    padding: 0 0 .5em 0;
+}
+
+#content h1:first-of-type {
+    margin-top: 0;
+}
+
+code, pre {
+    background: #ebeef2;
+    color: #35587c;
+    padding: 2px 4px;
+    font-family: monospace;
+    font-size: 1.2em;
+}
+
+.toc {
+    margin-bottom: 2em;
+}
+
+.toc a {
+    display: inline-block;
+    padding: .25em 0;
+}
+
+.toc ul {
+    margin: 0 0 0 1em;
+    padding: 0;
+    list-style: none;
+}
+
+.toc > ul > li > ul {
+    margin-bottom: 1em;
+}
+
+.toc > ul > li > a {
+    font-weight: bold;
+}
+
+#content .footnote {
+    margin-bottom: 2em;
+}
+
+.thumb {
+    float: right;
+    margin: 0 0 1em 1em;
+}
+
+.doc {
+    margin: 0;
+}
+
+.doc blockquote {
+    margin: 1em;
+    font-style: italic;
+    color: #808080;
+}
+
+

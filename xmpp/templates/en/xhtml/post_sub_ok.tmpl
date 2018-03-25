@@ -1,0 +1,2 @@
+You are subscribed to <a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;">#{{post_id}}</a>.
+{% if comments > 0 %}Comments: <a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}+%20" style="color:#448844; font-weight:bold; text-decoration:none;">{{comments}}</a>.{% endif %}

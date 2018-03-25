@@ -1,0 +1,30 @@
+{% extends "/base.html" %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/profile.css"/>
+{% endblock %}
+
+{% block left_menu %}{% endblock%}
+
+{% block content %}
+<div>
+    <h1>Почти всё готово!</h1>
+
+    <p>Осталось только выбрать ник, под которым Вы хотите зарегистрироваться.</p>
+
+    {% include "/auth/_errors.html" %}
+
+    <form id="profile-form" action="/register" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="label">Ник</div>
+            <div class="value"><input type="text" name="login" required="required" value="{{ info.login }}"/></div>
+        </div>
+
+        {% include "/auth/_info.html" %}
+
+        <div class="row">
+            <input type="submit" value="Зарегистрироваться"/>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "/blog.html" %}
+
+{% block title %}Сообщения от {{env.user.login}}{% endblock %}
+
+{% block subheader %}
+<a href="/messages">Новые</a>
+<a href="/messages/incoming">Входящие</a>
+<span class="active">Исходящие</span>
+{% endblock %}

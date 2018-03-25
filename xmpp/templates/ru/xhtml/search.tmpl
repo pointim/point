@@ -1,0 +1,25 @@
+{% for p in results %}
+<p style="margin:0">
+{% if p.private %}[приватный]{% endif %} <a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=@{{p.login}}%20" style="color:#4488ff; font-weight:bold; text-decoration:none;">@{{p.login}}</a>: {% if p.title %}<b style="color:#808080">{{p.title}}</b>{% endif %}
+{% if p.tags %}<br/>
+{% for t in p.tags %}
+<span style="color: #808080">*{{ t }}</span> 
+{% endfor %}{% endif %}
+</p>
+<p style="margin:0">
+{% if p.type=='feed' %}
+{{p.text|safe}}
+{% else %}
+{{p.text|xhtmlim|safe}}
+{% endif %}
+</p>
+{% if p.comment_id %}
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{p.post_id}}/{{p.comment_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;">#{{p.post_id}}/{{p.comment_id}}</a> 
+<a href="https://{{settings.domain}}/{{p.post_id}}#{{p.comment_id}}">https://{{settings.domain}}/{{p.post_id}}#{{p.comment_id}}</a>{% else %}
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{p.post_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;">#{{p.post_id}}</a> 
+<a href="https://{{settings.domain}}/{{p.post_id}}">https://{{settings.domain}}/{{p.post_id}}</a>{% endif %}
+<br/><br/>
+{% endfor %}
+<p style="margin:0">
+Поиск <i>{{text}}</i>: {% if total %}показаны результаты {{offset+1}}..{{offset+results|count}} из {{total}}.{% else %}ничего не найдено.{% endif %}
+</p>

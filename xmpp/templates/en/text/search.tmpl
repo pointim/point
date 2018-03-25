@@ -1,0 +1,10 @@
+{% for p in results %}
+{% if p.private %}[private]{% endif %} @{{p.login}}: {% if p.title %}{{p.title}}{% endif %}
+{% if p.tags %}
+{% for t in p.tags %}*{{ t }} {% endfor %}{% endif %}
+{{p.text}}
+{% if p.comment_id %}#{{p.post_id}}/{{p.comment_id}} https://{{settings.domain}}/{{p.post_id}}#{{p.comment_id}}{% else %}#{{p.post_id}} https://{{settings.domain}}/{{p.post_id}}{% endif %}
+
+{% endfor %}
+
+Search *{{text}}*: {% if total %}{{offset+1}}..{{offset+results|count}} of {{total}} results.{% else %}nothing is found.{% endif %}

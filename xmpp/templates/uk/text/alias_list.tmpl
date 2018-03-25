@@ -1,0 +1,6 @@
+{% if aliases.user %}*Аліаси користувача:*
+{% for a in aliases.user %}{{a}} = {{aliases.user[a]}}
+{% endfor %}{% endif %}
+{% if aliases.global %}*Глобальні аліаси:*
+{% for a in aliases.global %}{{a}} = {{aliases.global[a]}}
+{% endfor %}{% endif %}

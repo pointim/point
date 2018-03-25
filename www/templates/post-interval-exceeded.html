@@ -1,0 +1,7 @@
+{% extends "/base.html" %}
+{% block content %}
+    <div class="err50x">
+        <p>Слишком короткий промежуток времени между действиями.</p>
+        <a href="{{env.request.referer}}">&larr;&nbsp;вернуться</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "/feeds/index.html" %}
+
+{% set info = feed.get_info() %}
+
+{% block title %}Добавление фида: {{info.name}}{% endblock %}
+
+{% block content %}
+<form id="feed-form" action="/feeds/subscribe" method="post">
+    <input type="hidden" name="url" required="required" value="{{url}}"/>
+    <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+    <div class="clearfix">
+        <h1>{{info.name}}</h1>
+        <p>{{info.about}}</p>
+        <p>Записей: {{feed.posts_count() or "неизвестно" }}</p>
+        <p><a href="{{info.homepage}}">{{info.homepage}}</a></p>
+    </div>
+    <div class="clearfix">
+        <div class="buttons">
+            <input type="submit" value="Подписаться"/>
+        </div>
+    </div>
+</form>
+
+<div class="clearfix">
+    {% for p in feed.posts(10)|reverse %}
+    <div class="post clearfix">
+        <div class="info">
+            <a href="//{{p.login|lower}}.{{settings.domain}}/"><img class="avatar" src="{{ env.request.protocol }}{{ settings.avatars_root }}/av40.png" alt=""/></a>
+            <div class="created">
+                <span>{{p.created|strftime("%d %b")}}</span>
+                <span>{{p.created|strftime("%H:%M")}}</span>
+            </div>
+        </div>
+        <div class="post-content">
+            <div class="text">
+                <h1><a href="{{p.link}}">{{p.title or "Без названия"}}</a></h1>
+                {{p.text|markdown|safe}}
+            </div>
+            {% if p.tags %}<div class="tags">{% for t in p.tags %}<a class="tag" href="//{{p.login|lower}}.{{settings.domain}}/?tag={{t|urlencode}}">{{t}}</a> {% endfor %}</div>{% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

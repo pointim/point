@@ -1,0 +1,12 @@
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=@{{login}}%20" style="color:#4488ff; font-weight:bold; text-decoration:none;">@{{login}}</a><br/>
+{% if realname %}Name: {{realname}}<br/>{% endif %}
+{% if birthdate %}Birth date: {{birthdate|strftime('%d.%m.%Y')}}<br/>{% endif %}
+{% if location %}Location: {{location}}<br/>{% endif %}
+{% if homepage %}Home page: {{homepage}}<br/>{% endif %}
+{% if xmpp %}Jabber ID: {{xmpp}}<br/>{% endif %}
+{% if skype %}Skype: {{skype}}<br/>{% endif %}
+{% if icq %}ICQ: {{icq}}<br/>{% endif %}
+{% if about %}<br/>{{about|xhtmlim|safe}}<br/>{% endif %}
+{% if tune %}Listening to: {{tune['artist']}} &#x2014; {{tune['title']}}<br/>{% endif %}
+<a href="https://{{login|lower}}.{{settings.domain}}/">https://{{login|lower}}.{{settings.domain}}/</a><br/>
+{% include "en/xhtml/posts.tmpl" %}

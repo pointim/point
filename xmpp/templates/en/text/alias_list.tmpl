@@ -1,0 +1,6 @@
+{% if aliases.user %}*User aliases:*
+{% for a in aliases.user %}{{a}} = {{aliases.user[a]}}
+{% endfor %}{% endif %}
+{% if aliases.global %}*Global aliases:*
+{% for a in aliases.global %}{{a}} = {{aliases.global[a]}}
+{% endfor %}{% endif %}

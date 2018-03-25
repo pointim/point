@@ -1,0 +1,52 @@
+{% extends "/base.html" %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/profile.css"/>
+{% endblock %}
+
+{% block left_menu %}{% endblock%}
+
+{% block content %}
+<div>
+    {% if errors %}
+    <ul class="errors">
+        {% for e in errors %}
+        {% if e=='login' %}<li>Неверный логин или пароль.</li>{% endif %}
+        {% if e=='captcha' %}<li>Неверный текст.</li>{% endif %}
+        {% if e=='recaptcha-fail' %}<li>Не удалось связаться с сервером reCAPTCHA. Повторите попытку позже.</li>{% endif %}
+        {% endfor %}
+        {% if settings.debug %}<!--{{errors}}-->{% endif %}
+    </ul>
+    {% endif %}
+    {% if saved %}
+    <div class="saved">.</div>
+    {% endif %}
+    <form action="/remember" method="post">
+
+        <h1>Восстановление пароля</h1>
+
+        {% if not env.user.id %}
+        <div class="row">
+            <div class="label">Ник</div>
+            <div class="value"><input type="text" name="login" value=""/></div>
+        </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="label">Введите текст с&nbsp;картинки</div>
+            <div class="value">
+                <script type="text/javascript" src="//www.google.com/recaptcha/api/challenge?k={{settings.recaptcha_public_key}}"></script>
+                <noscript>
+                    <iframe src="//www.google.com/recaptcha/api/noscript?k={{settings.recaptcha_public_key}}" height="300" width="500" frameborder="0"></iframe><br>
+                    <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
+                    <input type="hidden" name="recaptcha_response_field" value="manual_challenge">
+                </noscript>
+            </div>
+        </div>
+
+        <div class="row">
+            <input type="submit" value="Дальше"/>
+        </div>
+    </form>
+</div>
+{% endblock %}

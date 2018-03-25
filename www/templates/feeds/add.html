@@ -1,0 +1,30 @@
+{% extends "/feeds/index.html" %}
+
+{% block title %}Добавление фида{% endblock %}
+
+{% block content %}
+<h1>Добавление фида</h1>
+
+<p>
+Введите URL фида, на который хотите подписаться. На данный момент поддерживаются RSS и Atom.
+</p>
+
+{% if errors %}
+<ul class="errors">
+    {% for e in errors %}
+    {% if e=='url' %}<li>Недопустимый URL</li>{% endif %}
+    {% if e=='type' %}<li>Ресурс недоступен или имеет неподдерживаемый тип.</li>{% endif %}
+    {% if e=='fetch' %}<li>Не удалось загрузить фид.</li>{% endif %}
+    {% endfor %}
+</ul>
+{% endif %}
+
+<form id="feed-form" action="/feeds/add" method="post">
+    <input type="text" id="url-input" name="url" required="required" placeholder="Введите URL" value="{{url}}"/>
+    <div class="clearfix">
+        <div class="buttons">
+            <input type="submit" value="Добавить"/>
+        </div>
+    </div>
+</form>
+{% endblock %}

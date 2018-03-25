@@ -1,0 +1,10 @@
+{% if blacklist %}<p><b>Your blacklist:</b><br/>
+{% for u in blacklist %}<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=@{{u.login}}%20" style="color:#4488ff; font-weight:bold; text-decoration:none;">@{{u.login}}</a>{% if loop.last %}.{% else %}, {% endif %}{% endfor %}</p>
+{% endif %}
+{% if tags %}
+<p><b>Tags:</b><br/>
+{% for tt in tags %}
+{% for t in tt.tags %}*{{t}}{% if not loop.last %}, {% endif %}{% endfor %}
+{% if tt.login %} of <a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=@{{tt.login}}%20" style="color:#4488ff; font-weight:bold; text-decoration:none;">@{{tt.login}}</a>{% endif %}{% if loop.last %}.{% else %};{% endif %}<br/>
+{% endfor %}</p>
+{% endif %}{% if not blacklist and not tags %}Your blacklist is empty.{% endif %}

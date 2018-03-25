@@ -1,0 +1,3 @@
+{% import 'text_common.tmpl' as common -%}
+{{common.comment(post_id, comment_id, comment_to, to_comment_id, author, text, files, '', settings)-}}
+{% if to_comment_id %} in response to /{{to_comment_id}}{% endif %}

@@ -1,0 +1,7 @@
+Белы спіс абноўлены.
+{% if added %}Дададзеныя: {{ added|map('login')|join(", ") }}.{% endif %}{% if already %}
+Ужо ў спісе: {{ already|map('login')|join(", ") }}.{% endif %}{% if denied %}
+Нельга дадаць: {{ denied|map('login')|join(", ") }}.{% endif %}{% if deleted %}
+Выдаленыя: {{ deleted|map('login')|join(", ") }}.{% endif %}{% if not_deleted %}
+Не ў спісе: {{ not_deleted|map('login')|join(", ") }}.{% endif %}{% if not_found %}
+Не знойдзеныя: {{ not_found|map('login')|join(", ") }}.{% endif %}

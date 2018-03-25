@@ -1,0 +1,5 @@
+<p>{% if private %}Асабісты допіс{% endif %}Допіс <a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;">#{{post_id}}</a> дасланы.</p>
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}+%20" style="color:#448844; font-weight:bold; text-decoration:none;" title="Апошнія 10 каментарыяў">[+]</a>
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}++%20" style="color:#448844; font-weight:bold; text-decoration:none;" title="Усе каментарыі">[++]</a>
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=D%20%23{{post_id}}" style="color:#448844; font-weight:bold; text-decoration:none;" title="Выдаліць">[D]</a>
+<a href="https://{{settings.domain}}/{{post_id}}">https://{{settings.domain}}/{{post_id}}</a>

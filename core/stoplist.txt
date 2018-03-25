@@ -1,0 +1,7 @@
+^\s*Это\s*антиспам\s*бот\.\s*Ответьте\s*на\s*вопрос\.\s*Как\s*называется\s*наша\s*планета
+^\s*А\s*я\s*вот\s*не\s*понимаю\s*нападок\s*на\s*дабстеп
+^\s*Внимание,\s*системное\s*сообщение!\s*Спамооборона\s*классифицировала\s*Ваше\s*сообщение\s*как\s*спам\.\s*Если\s*это\s*ошибка,\s*пожалуйста,\s*перейдите\s*по\s*ссылке\s*и\s*выполните\s*инструкции,\s*описанные\s*на\s*открывшейся\s*странице
+^\s*I'll\s*write\s*you\s*later\.\.\.
+^\s*Hello\.\s*This\s*is\s*my\s*Anti-spam\s*control\.\s*If\s*you\s*would\s*like\s*to\s*chat\s*with\s*me\s*please\s*answer\s*the\s*following\s*simple\s*question\.\s*What\s*is\s*the\s*name\s*of\s*our\s*planet
+^\s*I'm\s*sleeping\.\.\.\s*Please\s*IM\s*me\s*quietly
+^\s*Пожалуйста,\s*добавьте\s*меня\s*в\s*свой\s*список\s*контактов

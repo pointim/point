@@ -1,0 +1,7 @@
+Whitelist has been updated.
+{% if added %}Added: {{ added|map('login')|join(", ") }}.{% endif %}{% if already %}
+Already in list: {{ already|map('login')|join(", ") }}.{% endif %}{% if denied %}
+Cannot add: {{ denied|map('login')|join(", ") }}.{% endif %}{% if deleted %}
+Deleted: {{ deleted|map('login')|join(", ") }}.{% endif %}{% if not_deleted %}
+Not in list: {{ not_deleted|map('login')|join(", ") }}.{% endif %}{% if not_found %}
+Not found: {{ not_found|map('login')|join(", ") }}.{% endif %}

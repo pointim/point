@@ -1,0 +1,71 @@
+{% extends "/base.html" %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="/css/doc.css"/>
+<link rel="stylesheet" type="text/css" href="/css/code.css"/>
+{% endblock %}
+
+{% if path =='/about' %}{% set title = 'О проекте' %}
+{% elif path =='/tos' %}{% set title = 'Правила' %}
+{% endif %}
+
+{% block title %}{{ title or 'Справка' }}{% endblock %}
+
+{% block subheader %}
+<span class="breadcrumb active">{{ title or 'Справка' }}</span>
+{% endblock %}
+
+{% block aside %}
+<div class="aside">
+    <label class="aside-toggle" for="aside-toggle-cb">
+        <h1>Содержание</h1>
+    </label>
+
+    <div class="aside-content toc">
+        <ul>
+            <li><a href="{{prefix}}/about">О проекте</a></li>
+            <li><a href="{{prefix}}/tos">Правила</a></li>
+            <li>
+                <a href="{{prefix}}/help/commands">Команды</a>
+                <ul>
+                    <li><a href="{{prefix}}/help/commands#_1">Пользователи</a></li>
+                    <li><a href="{{prefix}}/help/commands#_2">Посты</a></li>
+                    <li><a href="{{prefix}}/help/commands#_7">Рекомендации</a></li>
+                    <li><a href="{{prefix}}/help/commands#_8">Подписки</a></li>
+                    <li><a href="{{prefix}}/help/commands#_10">Профиль</a></li>
+                    <li><a href="{{prefix}}/help/commands#_13">Алиасы</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="{{prefix}}/help/markdown">Markdown</a>
+                <ul>
+                    <li><a href="{{prefix}}/help/markdown#_1">Текст с выделением</a></li>
+                    <li><a href="{{prefix}}/help/markdown#_2">Программный код</a></li>
+                    <li><a href="{{prefix}}/help/markdown#_3">Списки</a></li>
+                    <li><a href="{{prefix}}/help/markdown#_4">Заголовки</a></li>
+                    <li><a href="{{prefix}}/help/markdown#_5">Цитаты</a></li>
+                    <li><a href="{{prefix}}/help/markdown#_6">Ссылки</a></li>
+                    <li><a href="{{prefix}}/help/markdown#_7">Изображения</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="{{prefix}}/help/api">API</a>
+                <ul>
+                    <li><a href="{{prefix}}/help/api#_1">Аутентификация</a></li>
+                    <li><a href="{{prefix}}/help/api#_4">Посты</a></li>
+                    <li><a href="{{prefix}}/help/api#_13">Теги</a></li>
+                    <li><a href="{{prefix}}/help/api#_17">Пользователи</a></li>
+                    <li><a href="{{prefix}}/help/api#websocket">WebSocket</a></li>
+                </ul>
+            </li>
+            <li><a href="{{prefix}}/help/apps">Приложения</a></li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="doc">
+{{ text|markdown|safe }}
+</div>
+{% endblock %}

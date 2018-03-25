@@ -1,0 +1,161 @@
+#content  .users {
+    margin: 10px 10px 3em 10px;
+    /*overflow: auto;*/
+    zoom: 1;
+}
+
+#content .users:before,
+#content .users:after {
+    content: "";
+    display: table;
+}
+
+#content .users:after {
+    clear: both;
+}
+
+#content  h1 {
+    margin: 10px 10px .5em 10px;
+}
+
+#content h1 label {
+    border-bottom: dashed 1px #a0a0a0;
+    cursor: pointer;
+}
+
+#content h1 + input[type="checkbox"] {
+    position: absolute;
+    left: -9999px;
+}
+
+#content h1 + input[type="checkbox"]:checked + .users {
+    display: none;
+}
+
+#content .users > .user {
+    position: relative;
+    float: left;
+    width: 28%;
+    min-width: 200px;
+    margin: 5px;
+    padding: 5px 5px 10px 5px;
+    /*border-bottom: solid 1px #f0f0f0;*/
+    overflow: hidden;
+    border: solid 1px #f0f0f0;
+    border-radius: 3px;
+    font-weight: normal;
+}
+
+#content .users > .user .avatar {
+    float: left;
+    width: 40px;
+    height: 40px;
+}
+
+#content .users > .user .info {
+    margin-left: 50px;
+    margin-right: 32px;
+}
+
+#content .users > .user .info .user {
+    display: block;
+    font-weight: bold;
+    color: #35587c;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.5em;
+}
+
+#content .users > .user .info .name {
+    display: block;
+    color: #a0a0a0;
+    font-size: .9em;
+    font-weight: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.5em;
+}
+
+#content .users > .user .info .del {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: block;
+    width: 16px;
+    height: 16px;
+    background-image: url("/img/btn-del.png");
+    background-size: 16px 16px;
+}
+
+@media (-webkit-min-device-pixel-ratio: 1.5), /* Webkit-based browsers */
+       (min--moz-device-pixel-ratio: 1.5),    /* Older Firefox browsers (prior to Firefox 16) */
+       (min-resolution: 1.5dppx) {
+    #content > div > .users > .user .info .del {
+        width: 24px;
+        height: 24px;
+        background-size: 24px 24px;
+    }
+}
+
+#content .users > p {
+    color: #a0a0a0;
+    margin: 0;
+}
+
+#content .users > .tags {
+    float: left;
+    clear: both;
+    margin-top: 2em;
+}
+
+#content .users > .tags .tags-section {
+    margin: 1em 0;
+}
+
+#content .users .tags div.tag {
+    position: relative;
+    display: inline-block;
+    margin: .8em .8em 0 0;
+    padding: .25em .5em;
+    background: #ebeef2;
+    /*font-size: .85em;*/
+    color: #35587c;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+#content .users .tags div.tag:before {
+    content: '';
+    position: absolute;
+    top: .8em;
+    left: 100%;
+    width: 0;
+    height: 0;
+    margin: -.7em 0 0 0;
+    padding: 0;
+    display: block;
+    border: solid;
+    border-color: transparent #ebeef2;
+    border-width: .8em 0 .8em 4px;
+}
+
+#content .users .tags div.tag a {
+    float: none;
+    margin: 0;
+    text-decoration: none;
+}
+
+
+
+#content .users > .tags div.tag a.del {
+    display: block;
+    float: right;
+    width: 16px;
+    height: 16px;
+    background-image: url("/img/btn-del.png");
+    background-size: 16px 16px;
+    margin-left: 16px;
+}
+

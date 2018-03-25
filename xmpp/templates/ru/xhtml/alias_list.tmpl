@@ -1,0 +1,8 @@
+{% if aliases.user %}<p><b>Пользовательские алиасы:</b><br/>
+{% for a in aliases.user %}
+<b style="color:#888">{{a}} = </b>{{aliases.user[a]}}<br/>
+{% endfor %}</p>{% endif %}
+{% if aliases.global %}<p><b>Глобальные алиасы:</b><br/>
+{% for a in aliases.global %}
+<b style="color:#888">{{a}} = </b>{{aliases.global[a]}}<br/>
+{% endfor %}</p>{% endif %}

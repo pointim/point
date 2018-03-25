@@ -1,0 +1,10 @@
+{% for p in results %}
+{% if p.private %}[приватний]{% endif %} @{{p.login}}: {% if p.title %}{{p.title}}{% endif %}
+{% if p.tags %}
+{% for t in p.tags %}*{{ t }} {% endfor %}{% endif %}
+{{p.text}}
+{% if p.comment_id %}#{{p.post_id}}/{{p.comment_id}} https://{{settings.domain}}/{{p.post_id}}#{{p.comment_id}}{% else %}#{{p.post_id}} https://{{settings.domain}}/{{p.post_id}}{% endif %}
+
+{% endfor %}
+
+Пошук *{{text}}*: {% if total %}показано результати {{offset+1}}..{{offset+results|count}} з {{total}}.{% else %}нічого не знайдено.{% endif %}

@@ -1,0 +1,51 @@
+{% extends "/recent.html" %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/tags.css"/>
+<link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/blog.css"/>
+<link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/feeds.css"/>
+<!--script type="text/javascript" src="//{{settings.domain}}/js/aside.js"></script>
+<script type="text/javascript" src="//{{settings.domain}}/js/jquery.autosize.js"></script>
+<script type="text/javascript" src="//{{settings.domain}}/js/jquery.tmpl.min.js"></script>
+<script type="text/javascript" src="//{{settings.domain}}/js/blog.js"></script-->
+{% endblock %}
+
+{% block title %}
+Фиды {{env.user.login}}
+{% endblock %}
+
+{% block aside %}
+{% if env.user.id %}
+<div class="aside">
+    <label class="aside-toggle" for="aside-toggle-cb">
+        <img class="avatar" alt="arts" src="https://i.{{settings.domain}}/left-menu-feeds.png">
+        <h1>Фиды</h1>
+    </label>
+
+    <div class="aside-content clearfix">
+        <div class="feed" id="new-feed">
+            <a href="//{{env.user.login|lower}}.{{settings.domain}}/feeds/add">Добавить фид</a>
+        </div>
+        {% for feed in feeds %}
+        <div class="feed">
+            <a class="name" href="//{{feed.login|lower}}.{{settings.domain}}/">{{feed.get_info('name') or feed.login}}</a>
+            <span class="url">{{feed.get_info('homepage') or '&nbsp;'|safe}}</span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+    {{ post_list(posts) }}
+
+    <div class="pager clearfix">
+        {% if page > 1 %}<a id="newer" href="/feeds/{{page-1}}">Следующие</a>{% endif %}
+        {% if posts|count > settings.page_limit %}
+        <a id="older" href="/feeds/{{page+1}}">Предыдущие</a>
+        <a id="more" href="/feeds" data-page="{{page}}" data-page-limit="{{settings.page_limit}}">Ещё</a>
+        {% endif %}
+    </div>
+{% endblock %}

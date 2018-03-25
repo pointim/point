@@ -1,0 +1,12 @@
+<p>Your {% if type=='xmpp' %}IM accounts{% elif type=='email' %}e-mails{% else %}{{type}} accounts{% endif %}:</p>
+{% for a in accounts %}
+{{a}} <a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=set%20{{type}}%20-{{a}}" style="color:#448844; font-weight:bold; text-decoration:none;" title="Delete">[ - ]</a>{% if a==active %}<i style="color:#808080">active</i>{% endif %}<br/>
+{% else %}
+<i>no accounts added yet.</i>
+{% endfor %}
+{% if unconfirmed %}
+<p>Unconfirmed:</p>
+{% for a in unconfirmed %}
+{{a}} <a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=set%20{{type}}%20-{{a}}" style="color:#448844; font-weight:bold; text-decoration:none;" title="Delete">[ - ]</a>{% if a==active %}<i style="color:#808080">active</i>{% endif %}<br/>
+{% endfor %}
+{% endif %}

@@ -1,0 +1,14 @@
+{% extends "/base.html" %}
+{% block content %}
+    <div class="err50x code">{{ code }}</div>
+    <div class="err50x">
+        <p>Something went wrong, and I cannot find the page you requested.</p>
+        <p>Maybe it was deleted or you typed URL incorrectly.</p>
+        <p>Please check the URL and try again or use search form below.</p>
+
+        <form action="/search">
+            <input type="text" name="text" placeholder="Search" required="required"/>
+            <input type="submit" value="Find"/>
+        </form>
+    </div>
+{% endblock %}

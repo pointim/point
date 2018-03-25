@@ -1,0 +1,52 @@
+{% extends "/base.html" %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="/css/doc.css"/>
+{% endblock %}
+
+{% block title %}Пожертвования{% endblock %}
+
+{% block subheader %}
+    <a href="//{{settings.domain}}/about">О проекте</a>
+    <a href="//{{settings.domain}}/tos">Правила</a>
+    <span class="active">Добро</span>
+    <a href="//{{settings.domain}}/contacts">Контакты</a>
+{% endblock %}
+
+{% block content %}
+<h1>Помоги проекту</h1>
+
+<div id="content-left">
+    <p><i>
+        New car, caviar, four star daydream<br/>
+        Think I'll buy me a football team.
+    </i></p>
+
+    <h2>Yandex.деньги</h2>
+
+    <form style="margin: 0; padding: 0;" action="https://money.yandex.ru/charity.xml" method="post"><input type="hidden" name="to" value="41001869639712"/><input type="hidden" name="CompanyName" value="Point.im"/><input type="hidden" name="CompanyLink" value="http://point.im/"/><table border="0" cellspacing="0" cellpadding="0"><tr><td><div style="background: url(https://img.yandex.net/i/li-uncolorer-rt.gif) no-repeat right top #FFFFFF;"><div style="background: url(https://img.yandex.net/i/li-uncolorer-rb.gif) no-repeat right bottom;"><div style="background: url(https://img.yandex.net/i/li-uncolorer-lb.gif) no-repeat left bottom;"><div style="background: url(https://img.yandex.net/i/li-uncolorer-lt.gif) no-repeat left top; margin-right: 10px; padding: 10px 0 0 10px;"><table border="0" cellspacing="0" cellpadding="0"><tr><td><table border="0" cellspacing="0" cellpadding="0"><tr><td><input type="submit" value="Отправить" style="margin-right: 5px;"/></td><td><input type="text" id="CompanySum" name="CompanySum" value="" size="4" style="margin-right: 5px;"/></td><td nowrap="nowrap" style="font: 70% Verdana, Arial, Geneva CY, Sans-Serif;" valign="bottom"><strong>рублей Яндекс.Деньгами</strong></td></tr></table></td><td width="90" rowspan="3" valign="bottom"><a href="http://money.yandex.ru/"><img src="https://img.yandex.net/i/ym-logo.gif" width="90" height="39" border="0" style="margin-left: 5px;"/></a></td></tr><tr><td nowrap="nowrap" style="font: 70% Verdana, Arial, Geneva CY, Sans-Serif;">на счет <span style="color: #006600; font-weight: bold;">41001869639712</span>&nbsp;(<a href="http://point.im/"><span style="color: #666666; text-decoration: underline;">Point.im</span></a>)</td></tr><tr><td><img src="https://img.yandex.net/i/x.gif" width="1" height="10" /></td></tr></table></div></div></div></div></td></tr></table></form>
+
+    <h2>WebMoney</h2>
+    <p>WMR: R313800320923</p>
+    <p>WMZ: Z173612945661</p>
+    <p>WME: E110128748657</p>
+
+    <h2>PayPal</h2>
+
+    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+    <input type="hidden" name="cmd" value="_s-xclick">
+    <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
+    ">
+    <input type="image" src="https://www.paypalobjects.com/ru_RU/RU/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal — более безопасный и легкий способ оплаты через Интернет!">
+    <img alt="" border="0" src="https://www.paypalobjects.com/ru_RU/i/scr/pixel.gif" width="1" height="1">
+    </form>
+
+    <h2>Bitcoin</h2>
+
+    <p>1Dt2bmAL1ayqE3ZozdG6Nr49kwFVLUuUEt</p>
+
+    <p></p>
+
+</div>
+
+{% endblock %}

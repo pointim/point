@@ -1,0 +1,12 @@
+<p>Ваші {% if type=='xmpp' %}IM-акаунти{% elif type=='email' %}e-mail'и{% else %}{{type}}-акаунти{% endif %}:</p>
+{% for a in accounts %}
+{{a}} <a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=set%20{{type}}%20-{{a}}" style="color:#448844; font-weight:bold; text-decoration:none;" title="Видалити">[ - ]</a>{% if a==active %}<i style="color:#808080">активний</i>{% endif %}<br/>
+{% else %}
+<i>жодного ще не додано.</i>
+{% endfor %}
+{% if unconfirmed %}
+<p>Непідтверджені:</p>
+{% for a in unconfirmed %}
+{{a}} <a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=set%20{{type}}%20-{{a}}" style="color:#448844; font-weight:bold; text-decoration:none;" title="Видалити">[ - ]</a>{% if a==active %}<i style="color:#808080">активний</i>{% endif %}<br/>
+{% endfor %}
+{% endif %}

@@ -1,0 +1,178 @@
+{% extends "/blog.html" %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/blog.css"/>
+<link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/subs.css"/>
+<script type="text/javascript" src="//{{settings.domain}}/js/aside.js"></script>
+<script type="text/javascript" src="//{{settings.domain}}/js/subs.js"></script>
+{% endblock %}
+
+{% block title %}{% if section=='subscriptions' %}Подписки{% else %}Читатели{% endif %} {{env.owner.login}}{% endblock %}
+
+{% block subheader %}
+{% if section=='subscriptions' %}
+<span class="active">Подписки</span>
+<a href="//{{env.owner.login|lower}}.{{settings.domain}}/subscribers">Читатели</a>
+{% elif section=='subscribers' %}
+<a href="//{{env.owner.login|lower}}.{{settings.domain}}/subscriptions">Подписки</a>
+<span class="active">Читатели</span>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if env.user.id==env.owner.id %}
+<h1><label for="subs-cb">{% if section=='subscriptions' %}Подписки{% else %}Подписчики{% endif %} {{env.owner.login}}</label></h1>
+<input type="checkbox" id="subs-cb"/>
+{% else %}
+<h1>{% if section=='subscriptions' %}Подписки{% else %}Подписчики{% endif %} {{env.owner.login}}</h1>
+{% endif %}
+
+<div class="users">
+{% if section=='subscriptions' and env.user.id==env.owner.id %}
+{% for u in users %}
+<div class="user">
+    <a class="user" href="//{{u.login|lower}}.{{settings.domain}}/"><img class="avatar" src="{{ env.request.protocol }}{{ settings.avatars_root }}{% if u.info.avatar %}/40/{{u.info.avatar}}{% else %}/av40.png{% endif %}" alt="{{u.login}}"/></a>
+    <div class="info">
+        <a class="user" href="//{{u.login|lower}}.{{settings.domain}}/">{{u.login}}</a>
+        {% if u.info.name %}<span class="name">{{u.info.name}}</span>{% endif %}
+        <a class="del" href="//{{u.login|lower}}.{{settings.domain}}/user/u?csrf_token={{csrf_token()}}" title="Отписаться" data-confirm="Отписаться от {{u.login}}?"></a>
+    </div>
+</div>
+{% endfor %}
+
+<div class="tags">
+    <h2>Теги</h2>
+    {% for tt in env.user.tag_subscriptions() %}
+        <div class="tags-section">
+        {% if tt.login %}<a class="user" href="//{{tt.login}}.{{settings.domain}}/">{{tt.login}}</a>:{% endif %}
+        {% for t in tt.tags %}
+            <div class="tag">
+            <a class="del" href="//{% if tt.login %}{{tt.login|lower}}.{% endif %}{{settings.domain}}/tag/u?tag={{t|urlencode}}&csrf_token={{csrf_token()}}" title="Отписаться" data-confirm="Отписаться от тега {{t}}?"></a>
+            <a href="//{% if tt.login %}{{tt.login|lower}}.{% endif %}{{settings.domain}}/?tag={{t|urlencode}}">{{t}}</a>
+            </div>
+        {% endfor %}
+        </div>
+    {% endfor %}
+</div>
+
+{% else %}
+{% for u in users %}
+<a class="user" href="//{{u.login|lower}}.{{settings.domain}}/">
+    <img class="avatar" src="{{ env.request.protocol }}{{ settings.avatars_root }}{% if u.info.avatar %}/40/{{u.info.avatar}}{% else %}/av40.png{% endif %}" alt="{{u.login}}"/>
+    <div class="info">
+        <span class="user">{{u.login}}</span>
+        {% if u.info.name %}<span class="name">{{u.info.name}}</span>{% endif %}
+    </div>
+</a>
+{% endfor %}
+{% endif %}
+</div>
+
+{% if env.user.id==env.owner.id %}
+
+<h1><label for="req-in-cb">Запросы на подписку</label></h1>
+<input type="checkbox" id="req-in-cb"/>
+
+<div class="users">
+{% for u in env.user.incoming_subscription_requests() %}
+<div class="user">
+    <a class="user" href="//{{u.login|lower}}.{{settings.domain}}/"><img class="avatar" src="{{ env.request.protocol }}{{ settings.avatars_root }}{% if u.info.avatar %}/40/{{u.info.avatar}}{% else %}/av40.png{% endif %}" alt="{{u.login}}"/></a>
+    <div class="info">
+        <a class="user" href="//{{u.login|lower}}.{{settings.domain}}/">{{u.login}}</a>
+        {% if u.info.name %}<span class="name">{{u.info.name}}</span>{% endif %}
+        <a class="del" href="//{{u.login|lower}}.{{settings.domain}}/user/uwl?csrf_token={{csrf_token()}}" title="Отклонить" data-confirm="Отклонить запрос {{u.login}}?"></a>
+    </div>
+</div>
+{% else %}
+<p>Нет запросов</p>
+{% endfor %}
+</div>
+
+<h1><label for="req-out-cb">Запросы на подписку от вас</label></h1>
+<input type="checkbox" id="req-in-cb"/>
+
+<div class="users">
+{% for u in env.user.outgoing_subscription_requests() %}
+<div class="user">
+    <a class="user" href="//{{u.login|lower}}.{{settings.domain}}/"><img class="avatar" src="{{ env.request.protocol }}{{ settings.avatars_root }}{% if u.info.avatar %}/40/{{u.info.avatar}}{% else %}/av40.png{% endif %}" alt="{{u.login}}"/></a>
+    <div class="info">
+        <a class="user" href="//{{u.login|lower}}.{{settings.domain}}/">{{u.login}}</a>
+        {% if u.info.name %}<span class="name">{{u.info.name}}</span>{% endif %}
+        <a class="del" href="//{{u.login|lower}}.{{settings.domain}}/user/u?csrf_token={{csrf_token()}}" title="Отменить" data-confirm="Отменить запрос {{u.login}}?"></a>
+    </div>
+</div>
+{% else %}
+<p>Нет запросов</p>
+{% endfor %}
+</div>
+
+<h1><label for="wl-cb">Белый список</label></h1>
+<input type="checkbox" id="wl-cb"/>
+
+<div class="users">
+{% for u in env.user.whitelist() %}
+<div class="user">
+    <a class="user" href="//{{u.login|lower}}.{{settings.domain}}/"><img class="avatar" src="{{ env.request.protocol }}{{ settings.avatars_root }}{% if u.info.avatar %}/40/{{u.info.avatar}}{% else %}/av40.png{% endif %}" alt="{{u.login}}"/></a>
+    <div class="info">
+        <a class="user" href="//{{u.login|lower}}.{{settings.domain}}/">{{u.login}}</a>
+        {% if u.info.name %}<span class="name">{{u.info.name}}</span>{% endif %}
+        <a class="del" href="//{{u.login|lower}}.{{settings.domain}}/user/uwl?csrf_token={{csrf_token()}}" title="Удалить из белого списка" data-confirm="Вы действительно хотите удалить {{u.login}} из белого списка?"></a>
+    </div>
+</div>
+{% else %}
+<p>Белый список пуст</p>
+{% endfor %}
+</div>
+
+<h1><label for="bl-cb">Чёрный список</label></h1>
+<input type="checkbox" id="bl-cb"/>
+
+<div class="users">
+{% for u in env.user.blacklist() %}
+<div class="user">
+    <a class="user" href="//{{u.login|lower}}.{{settings.domain}}/"><img class="avatar" src="{{ env.request.protocol }}{{ settings.avatars_root }}{% if u.info.avatar %}/40/{{u.info.avatar}}{% else %}/av40.png{% endif %}" alt="{{u.login}}"/></a>
+    <div class="info">
+        <a class="user" href="//{{u.login|lower}}.{{settings.domain}}/">{{u.login}}</a>
+        {% if u.info.name %}<span class="name">{{u.info.name}}</span>{% endif %}
+        <a class="del" href="//{{u.login|lower}}.{{settings.domain}}/user/ubl?csrf_token={{csrf_token()}}" title="Удалить из чёрного списка" data-confirm="Вы действительно хотите удалить {{u.login}} из чёрного списка?"></a>
+    </div>
+</div>
+{% else %}
+<p>Чёрный список пуст</p>
+{% endfor %}
+
+<div class="tags">
+    <h2>Теги</h2>
+    {% for tt in env.user.tag_blacklist() %}
+        <div class="tags-section">
+        {% if tt.login %}<a class="user" href="//{{tt.login}}.{{settings.domain}}/">{{tt.login}}</a>:{% endif %}
+        {% for t in tt.tags %}
+            <div class="tag">
+            <a class="del" href="//{% if tt.login %}{{tt.login|lower}}.{% endif %}{{settings.domain}}/tag/ubl?tag={{t|urlencode}}&csrf_token={{csrf_token()}}" title="Удалить" data-confirm="Вы действительно хотите удалить тег {{t}} из чёрного списка?"></a>
+            <a class="tag" href="//{% if tt.login %}{{tt.login|lower}}.{% endif %}{{settings.domain}}/?tag={{t|urlencode}}">{{t}}</a>
+            </div>
+        {% endfor %}
+        </div>
+    {% endfor %}
+</div>
+</div>
+
+<h1><label for="blers-cb">Пользователи, у которых вы в черном списке</label></h1>
+<input type="checkbox" id="blers-cb"/>
+
+<div class="users">
+{% for u in env.user.blacklisters() %}
+<div class="user">
+    <a class="user" href="//{{u.login|lower}}.{{settings.domain}}/"><img class="avatar" src="{{ env.request.protocol }}{{ settings.avatars_root }}{% if u.info.avatar %}/40/{{u.info.avatar}}{% else %}/av40.png{% endif %}" alt="{{u.login}}"/></a>
+    <div class="info">
+        <a class="user" href="//{{u.login|lower}}.{{settings.domain}}/">{{u.login}}</a>
+        {% if u.info.name %}<span class="name">{{u.info.name}}</span>{% endif %}
+    </div>
+</div>
+{% else %}
+<p>Вы никого не оскорбили своим существованием</p>
+{% endfor %}
+</div>
+
+{% endif %}
+{% endblock %}

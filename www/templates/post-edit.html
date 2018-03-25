@@ -1,0 +1,64 @@
+{% extends "/base.html" %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/blog.css"/>
+<script type="text/javascript" src="//{{settings.domain}}/js/jquery.autosize.js"></script>
+<script type="text/javascript" src="//{{settings.domain}}/js/jquery.tmpl.min.js"></script>
+<script type="text/javascript" src="//{{settings.domain}}/js/blog.js"></script>
+{% endblock %}
+
+{% block title %}Блог {{env.owner.login}} &mdash; пост #{{post.id}}{% endblock %}
+
+{% block content %}
+    {% if errors %}
+    <ul class="errors">
+        {% for e in errors %}
+        {% if e=='diff' %}<li>Слишком много изменений.</li>{% endif %}
+        {% if e=='expired' %}<li>Истекло время редактирования.</li>{% endif %}
+        {% if e=='commented' %}<li>У поста уже есть комментарии.</li>{% endif %}
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% if env.user.id %}
+    <form id="post-edit-form" class="post post-form" action="/{{post.id}}/e" method="post" enctype="multipart/form-data" autocomplete="off">
+        <div class="info">
+            <img class="avatar" src="{% if env.user.avatar %}{{ env.request.protocol }}{{ settings.avatars_root }}/40/{{env.user.avatar}}{% else %}/img/av40.png{% endif %}" alt="{{env.user.login}}"/>
+            <div class="created">
+                <span>{{post.created|strftime("%d %b")}}</span>
+                <span>{{post.created|strftime("%H:%M")}}</span>
+            </div>
+        </div>
+        <div class="post-content">
+            <div class="text">
+                {#<label id="post-private-label"><input type="checkbox" name="private"/>Приватный</label>#}
+                <textarea id="text-input" name="text" placeholder="Текст">{{post.text}}</textarea>
+                <textarea id="tags-input" name="tags" placeholder="Теги (разделяются запятыми)">{{post.tags|join(', ')}}</textarea>
+                <div class="clearfix">
+                    <div class="attach">
+                        {% if post.files %}
+                        <div class="attaches clearfix">
+                            {% for f in post.files %}
+                                <div class="postimg">
+                                    <img src="{{env.request.protocol}}{{settings.media_root}}/{{f|urlencode}}.thumb" alt="{{f|basename}}"/>
+                                    <input type="checkbox" name="del-attach" value="{{f|urlencode}}" title="Удалить {{f|basename}}"/>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <input type="file" name="attach"/>
+                        <input type="file" name="attach"/>
+                    </div>
+                    <div class="buttons">
+                        <input type="submit" value="Сохранить"/>
+                    </div>
+                </div>
+                <div class="footnote">
+                    Для форматирования текста используется <a href="//{{settings.domain}}/help/markdown">Markdown</a>.<br/>
+                    Пост можно изменить один раз и только в течение {{(settings.edit_expire/60)|int}} минут после создания.
+                </div>
+                <input type="hidden" name="csrf_token" value="{{csrf_token()}}"/>
+            </div>
+        </div>
+    </form>
+    {% endif %}
+{% endblock %}

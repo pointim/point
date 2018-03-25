@@ -1,0 +1,8 @@
+Белый список обновлён.<br/>
+{% if added %}
+<b>Добавлены</b>: {{ added|map('login', True)|join(", ")|safe }}.<br/>{% endif %}{% if already %}
+<b>Уже в списке</b>: {{ already|map('login', True)|join(", ")|safe }}.<br/>{% endif %}{% if denied %}
+<b>Не можете добавить</b>: {{ denied|map('login', True)|join(", ")|safe }}.<br/>{% endif %}{% if deleted %}
+<b>Удалены</b>: {{ deleted|map('login', True)|join(", ")|safe }}.<br/>{% endif %}{% if not_deleted %}
+<b>Не в списке</b>: {{ not_deleted|map('login', True)|join(", ")|safe }}.<br/>{% endif %}{% if not_found %}
+<b>Не найдены</b>: {{ not_found|map('login', True)|join(", ")|safe }}.{% endif %}

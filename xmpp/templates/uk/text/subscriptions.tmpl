@@ -1,0 +1,15 @@
+{% if subscriptions %}Ви підписані на:
+{% for u in subscriptions %}@{{u.login}}{% if loop.last %}.{% else %}, {% endif %}{% endfor %}{% endif %}{% if subscribers %}
+
+На вас підписані:
+{% for u in subscribers %}@{{u.login}}{% if loop.last %}.{% else %}, {% endif %}{% endfor %}{% endif %}{% if in_req %}
+
+Запити про підписку:
+{% for u in in_req %}@{{u.login}}{% if loop.last %}.{% else %}, {% endif %}{% endfor %}{% endif %}{% if out_req %}
+
+Запити про підписку від вас:
+{% for u in out_req %}@{{u.login}}{% if loop.last %}.{% else %}, {% endif %}{% endfor %}{% endif %}{% if tags %}
+
+Теги:
+{% for tt in tags %}{% for t in tt.tags %}*{{t}}{% if not loop.last %}, {% endif %}{% endfor %}{% if tt.login %} користувача @{{tt.login}}{% endif %}{% if loop.last %}.{% else %};{% endif %}
+{% endfor %}{% endif %}{% if not subscriptions and not subscribers and not in_req and not out_req and not tags %}Ви ще ні на кого не підписані.{% endif %}

@@ -1,0 +1,20 @@
+<p style="margin:0"><a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=@{{author}}%20" style="color:#4488ff; font-weight:bold; text-decoration:none;">@{{author}}</a>{% if to_comment_id %} 
+в ответ на <a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}%2f{{to_comment_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;">#{{post_id}}/{{to_comment_id}}</a>{% endif %}:</p>
+{% if to_text %}<p style="color:#808080;margin:0 0 1em 0">{% if to_text|count > 128 %}{{to_text[:125]|xquote|safe}}...{% else %}{{to_text|xquote|safe}}{% endif %}</p>{% endif %}
+<p>{{text|xhtmlim|safe}}</p>
+{% if files %}
+<p>
+{% for f in files %}
+<a href="http{{settings.media_root}}/{{f}}">{{f|basename}}</a><br/>
+{% endfor %}
+</p>
+{% endif %}
+<p style="margin:0">
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}%2f{{comment_id}}%20@{{author}},%20" style="color:#448844; font-weight:bold; text-decoration:none;">#{{post_id}}/{{comment_id}}</a> 
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=u%20%23{{post_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;" title="Отписаться">[U]</a>
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=!%20%23{{post_id}}%2f{{comment_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;" title="Рекомендовать">[!]</a>
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=~%20%23{{post_id}}%2f{{comment_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;" title="В закладки">[~]</a>
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}+%20" style="color:#448844; font-weight:bold; text-decoration:none;" title="Последние 10 комментариев">[+]</a>
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}++%20" style="color:#448844; font-weight:bold; text-decoration:none;" title="Все комментарии">[++]</a> 
+<a href="https://{{settings.domain}}/{{post_id}}#{{comment_id}}">{{settings.domain}}/{{post_id}}#{{comment_id}}</a>
+</p>

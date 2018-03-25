@@ -1,0 +1,9 @@
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=@{{author}}%20" style="color:#4488ff; font-weight:bold; text-decoration:none;">@{{author}}</a> has updated <a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;">#{{post_id}}</a>: 
+{% if tags %}{% for t in tags %}
+    <a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=**{{t}}" style="color:#808080;text-decoration:none">*{{ t }}</a>
+{% endfor %}{% endif %}
+<br/>
+{{text|xhtmlim|safe}}
+<br/>
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;">#{{post_id}}</a> 
+<a href="https://{{settings.domain}}/{{post_id}}">https://{{settings.domain}}/{{post_id}}</a>

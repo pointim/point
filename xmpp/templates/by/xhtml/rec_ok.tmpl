@@ -1,0 +1,6 @@
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=@{{author}}%20" style="color:#4488ff; font-weight:bold; text-decoration:none;">@{{author}}</a> рэкамендаваў Ваш 
+{% if comment_id %}каментарый <a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}%2f{{comment_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;">#{{post_id}}/{{comment_id}}</a>
+{% else %}допіс <a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;">#{{post_id}}</a>{% endif %}{% if text %}: {{text|xhtmlim|safe}} 
+(<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}%2f{{rcid}}%20" style="color:#448844; font-weight:bold; text-decoration:none;">#{{post_id}}/{{rcid}}</a>)<br/>
+<a href="https://{{settings.domain}}/{{post_id}}#{{rcid}}">https://{{settings.domain}}/{{post_id}}#{{rcid}}</a>
+{% else %}<br/>{% if comment_id %}<a href="https://{{settings.domain}}/{{post_id}}#{{comment_id}}">https://{{settings.domain}}/{{post_id}}#{{comment_id}}</a>{% else %}<a href="https://{{settings.domain}}/{{post_id}}">https://{{settings.domain}}/{{post_id}}</a>{% endif %}{% endif %}

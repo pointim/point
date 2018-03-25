@@ -1,0 +1,12 @@
+{% import 'text_common.tmpl' as common -%}
+{{common.post(author, tags, title, text, link, files, settings)-}}
+{% if updates %}{% for upd in updates %}UPD {{upd.no}}: {{upd.text}}
+{% endfor %}{% endif %}#{{post_id}} https://{{settings.domain}}/{{post_id}}
+
+{% if rec_users %}Рекомендовано {% for u in rec_users %}@{{u.login}}{% if loop.index==rec_users|count %}{% elif loop.index==rec_users|count-1 %} та {% else %}, {% endif %}{% endfor %}
+{% endif %}
+{% for c in comments %}
+{{common.comment(post_id, c.comment_id, c.comment_to, c.to_comment_id, c.comment_author, c.comment_text, c.files, c.is_rec, settings)-}}
+{% if c.to_comment_id %} у відповідь на /{{c.to_comment_id}}{% endif %}
+{% else %}{% if comments_count %}Коментарів: {{comments_count}}{% else %}Немає коментарів{% endif %}
+{% endfor %}

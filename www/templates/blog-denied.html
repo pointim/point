@@ -1,0 +1,7 @@
+{% extends "/base.html" %}
+{% block content %}
+    <div class="err50x code">403</div>
+    <div class="err50x">
+        <p>Пользователь{% if env.owner and env.owner.login %} <a class="user" href="//{{env.owner.login}}.{{settings.domain}}/">{{env.owner.login}}</a>{% endif %} ограничил доступ к своему блогу.</p>
+    </div>
+{% endblock %}

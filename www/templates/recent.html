@@ -1,0 +1,52 @@
+{% extends "/blog.html" %}
+
+{% block title %}{% if unread %}Непрочитанные{% else %}Лента подписок{% endif %} {{env.user.login}}{% if section=='recent_posts' %}: посты{% endif %}{% endblock %}
+
+{% block subheader %}
+    {% if unread %}
+    <a href="/">Все</a>
+    <a href="/recent/unread" class="unread-count active">{{ unread_posts or 0 }}</a>
+    {% else %}
+    <span class="active">Все</span>
+    {% if unread_posts %}<a class="unread-count" href="/recent/unread">{{ unread_posts or 0 }}</a>{% endif %}
+    {% endif %}
+    {% if unread_posts %}
+    <a class="clear-unread-btn" href="/recent/clear?csrf_token={{csrf_token()}}" title="Отметить все как прочитанные"></a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+    {% if posts|count == 0 %}
+    <div class="no-posts">
+        {% if unread %}
+        <h2>Непрочитанных нет</h2>
+        У вас нет непрочитанных постов.
+        {% else %}
+        <h2>Добро пожаловать в уютный поинт!</h2>
+        {% if env.owner.subs_count() == 0 %}
+        Вы ещё ни на кого не подписались, поэтому Ваша лента пуста.
+        {% else %}
+        Люди, на которых Вы подписаны, ещё ничего не написали, поэтому Ваша лента пуста.
+        {% endif %}
+        Вы можете воспользоваться <a href="//{{settings.domain}}/search">поиском</a>,
+        чтобы найти посты на интересующие Вас темы, или посмотреть <a href="//{{settings.domain}}/all">общую ленту постов</a>.
+        {% endif %}
+    </div>
+    {% else %}
+    {{ post_list(posts) }}
+    {% endif %}
+
+    {% if not unread %}
+    <div class="pager clearfix">
+        {% if section in ['recent', 'recent_all'] or not section %}
+            {% if page > 1 %}<a id="newer" href="/recent/{{page-1}}">Следующие</a>{% endif %}
+            {% if posts|count > settings.page_limit %}
+            <a id="older" href="/recent/{{page+1}}">Предыдущие</a>
+            <a id="more" href="/recent" data-page="{{page}}" data-page-limit="{{settings.page_limit}}">Ещё</a>
+            {% endif %}
+        {% endif %}
+    </div>
+    {% endif %}
+
+{% endblock %}

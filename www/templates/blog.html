@@ -1,0 +1,364 @@
+{% extends "/base.html" %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/blog.css?1"/>
+<link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/code.css"/>
+{#<script type="text/javascript" src="//{{settings.domain}}/js/aside.js"></script>
+<script type="text/javascript" src="//{{settings.domain}}/js/jquery.autosize.js"></script>
+<script type="text/javascript" src="//{{settings.domain}}/js/jquery.tmpl.min.js"></script>
+<script type="text/javascript" src="//{{settings.domain}}/js/blog.js"></script>#}
+
+{% if env.owner and env.owner.id and env.owner.type != 'feed' %}
+<link rel="alternate" type="application/rss+xml" title="POINT | RSS 2.0" href="//{{env.owner.login}}.{{settings.domain}}/rss"/>
+{% endif %}
+{% endblock %}
+
+{% block title %}Блог {{env.owner.login}}{% endblock %}
+
+{% block subheader %}
+    <span class="active user">@{{env.owner.login}}</span>
+{% endblock %}
+
+{% block aside %}
+    {% if env.owner.id %}
+    {% set info = env.owner.get_info() %}
+    <div class="aside">
+        <div class="aside-content">
+            <div class="avatar-wrap">
+                <div class="info">
+                    <h1>{{env.owner.login}}</h1>
+                    {% if info.name %}<div class="name">{{info.name}}</div>{% endif %}
+                </div>
+                <img class="avatar" alt="{{env.owner.login}}" src="{{ env.request.protocol }}{{ settings.avatars_root }}{% if info.avatar %}/280/{{info.avatar}}{% else %}/av280.png{% endif %}"/>
+            </div>
+            <div id="about">
+                {% if info.birthdate %}<p>Дата рождения: {{info.birthdate|strftime("%d.%m.%Y")}}</p>{% endif %}
+                {% if info.about %}<p>{{ info.about|nl2br|safe }}</p>{% endif %}
+
+                {% if info.homepage %}<p>
+                <a href="{% if not info.homepage.startswith('http://') and not info.homepage.startswith('https://') %}http://{% endif %}{{info.homepage}}" rel="nofollow">{{info.homepage}}</a>
+                </p>{% endif %}
+                {% set tune = env.owner.get_tune() %}
+                {% if tune %}
+                <p>Слушает: {{tune['artist']}} &mdash; {{tune['title']}}</p>
+                {% endif %}
+            </div>
+
+            <div id="counters">
+                <a id="subs" href="/subscriptions">
+                    <span class="value">{{env.owner.subs_count()}}</span>
+                    <span class="units">я читаю</span>
+                </a>
+                <a id="readers" href="/subscribers">
+                    <span class="value">{{env.owner.readers_count()}}</span>
+                    <span class="units">меня читают</span>
+                </a>
+                <div id="posts-count">
+                    <span class="value">{{env.owner.posts_count()}}</span>
+                    <span class="units">постов</span>
+                </div>
+                <div id="comments-count">
+                    <span class="value">{{env.owner.comments_count()}}</span>
+                    <span class="units">комментариев</span>
+                </div>
+                <div id="sizer"></div>
+            </div>
+
+            {% if env.user.id and env.user.id!=env.owner.id %}
+            <div id="sub">
+                {% if env.owner.check_subscriber(env.user) %}
+                <a href="/user/u?csrf_token={{csrf_token()}}">Отписаться от {{env.owner.login}}</a>
+                    {% if env.owner.check_rec_subscriber(env.user) %}
+                    <a href="/user/ur?csrf_token={{csrf_token()}}">Отписаться от рекомендаций {{env.owner.login}}</a>
+                    {% else %}
+                    <a href="/user/sr?csrf_token={{csrf_token()}}">Подписаться на рекомендации {{env.owner.login}}</a>
+                    {% endif %}
+                {% else %}
+                <a href="/user/s?csrf_token={{csrf_token()}}">Подписаться на {{env.owner.login}}</a>
+                {% endif %}
+                {% set sub_bl = env.user.check_blacklist(env.owner) %}
+                {% if sub_bl %}
+                <a href="/user/ubl?csrf_token={{csrf_token()}}">Удалить из чёрного списка</a>
+                {% else %}
+                    {% if env.user.check_whitelist(env.owner) %}
+                    <a href="/user/uwl?csrf_token={{csrf_token()}}">Удалить из белого списка</a>
+                    {% else %}
+                    <a href="/user/wl?csrf_token={{csrf_token()}}">Добавить в белый список</a>
+                    {% endif %}
+                    <a href="/user/bl?csrf_token={{csrf_token()}}">Добавить в чёрный список</a>
+                {% endif %}
+            </div>
+            {% endif %}
+
+
+            {% set user_tags = env.owner.tags(10) %}
+            {% if user_tags %}
+            <div id="tags">
+                {% for t in user_tags %}
+                <a class="tag" href="/?tag={{t.tag|urlencode}}" title="{{t.tag}}: {{t.cnt}}">{{t.tag}}<span>{{t.cnt}}</span></a>
+                {% endfor %}
+                <a id="all-tags" href="/tags">все теги</a>
+            </div>
+            {% endif %}
+
+        </div>
+
+        <label class="aside-toggle" for="aside-toggle-cb">
+            <img class="avatar" alt="arts" src="{{ env.request.protocol }}{{ settings.avatars_root }}{% if info.avatar %}/24/{{info.avatar}}{% else %}/av24.png{% endif %}"/>
+            <h1>Информация</h1>
+        </label>
+    </div>
+    {% endif %}
+{% endblock %}
+
+{% macro post_list(posts) %}
+    {% for p in posts %}
+    {% if loop.index > settings.page_limit %}{% break %}{% endif %}
+    <div class="post{% if p.post.private %} private{% endif %}{% if p.post.pinned %} pinned{% endif %}" data-id="{{p.post.id}}">
+        <header class="post-header">
+            {% if p.rec %}
+                {% set author = p.rec.author %}
+            {% else %}
+                {% set author = p.post.author %}
+            {% endif %}
+
+            <a href="//{{author.login|lower}}.{{settings.domain}}/"><img class="post-avatar" src="{{ env.request.protocol }}{{ settings.avatars_root }}{% if author.get_info('avatar') %}/40/{{author.get_info('avatar')}}{% else %}/av40.png{% endif %}" alt="{{author.login}}"/></a>
+            <a href="//{{author.login|lower}}.{{settings.domain}}/" class="post-author user">{{author.login}}</a>
+
+            <time class="post-created">
+                <span>{{p.post.created|strftime("%d %b")}}</span>
+                {% if p.post.created|strftime("%Y")==__now__|strftime("%Y") %}
+                <span>{{p.post.created|strftime("%H:%M")}}</span>
+                {% else %}
+                <span>{{p.post.created|strftime("%Y")}}</span>
+                {% endif %}
+            </time>
+        </header>
+
+        <div class="post-content">
+            {% if p.btext %}<div class="btext">{{p.btext}}</div>{% endif %}
+            {% if p.rec %}
+                {% if p.rec.text %}<div class="rtext">{{p.rec.text|markdown|safe}}</div>{% endif %}
+                <div class="rec">
+                    <a href="//{{p.post.author.login|lower}}.{{settings.domain}}/"><img class="avatar" src="{{ env.request.protocol }}{{ settings.avatars_root }}{% if p.post.author.get_info('avatar') %}/24/{{p.post.author.get_info('avatar')}}{% else %}/av24.png{% endif %}" alt="{{p.post.author.login}}"/></a>
+                    <a href="//{{p.post.author.login|lower}}.{{settings.domain}}/" class="user rcmd">{{p.post.author.login}}</a>
+                </div>
+            {% endif %}
+            {% if not p.comment_id and p.post.tags %}<p class="post-tags">{% for t in p.post.tags %}<a class="post-tag" href="//{{p.post.author.login|lower}}.{{settings.domain}}/?tag={{t|urlencode}}">{{t}}</a> {% endfor %}</p>{% endif %}
+            <div class="text">
+                <div class="text-content">
+                {% if p.post.title %}<h1>{% if p.post.link %}<a href="{{p.post.link}}">{{p.post.title}}</a>{% else %}{{p.post.title}}{% endif %}</h1>{% endif %}
+                {{p.post.text|markdown(post=p.post.id, comment=p.comment_id)|safe}}
+                </div>
+            {% if p.post.files %}
+            <div class="files clearfix">
+                {% for f in p.post.files %}
+                <a class="postimg" href="{{env.request.protocol}}{{ settings.media_root }}/{{ f }}">
+                    <img src="{{env.request.protocol}}{{ settings.media_root }}/{{ f }}.thumb" alt="{{ f|basename }}"/>
+                </a>
+                {% endfor %}
+            </div>
+            {% endif %}
+            </div>
+            {#<div class="more-links">
+                <a class="more" href="//{{p.login|lower}}.{{settings.domain}}/{{p.id}}">Читать полностью</a>
+                <a class="less" href="//{{p.login|lower}}.{{settings.domain}}/{{p.id}}">Скрыть</a>
+            </div>#}
+
+            <div class="clearfix">
+                <div class="post-id">
+                    {% if p.comment_id %}
+                    <a href="//{{p.post.author.login|lower}}.{{settings.domain}}/{{p.post.id}}#{{p.comment_id}}">#{{p.post.id}}/{{p.comment_id}}</a>
+                    {% else %}
+                    <a href="//{{p.post.author.login|lower}}.{{settings.domain}}/{{p.post.id}}">#{{p.post.id}}
+                        {% if p.post.comments_count() %}<span class="cn">{{p.post.comments_count()}}</span>{% if p.unread %}<span class="unread">{{p.unread}}</span>{% endif %}{% endif %}
+                    </a>
+                    {% endif %}
+                </div>
+
+                {% if env.user.id and not p.post.archive %}
+                <div class="action-labels">
+                    <label class="reply-label" for="reply-{{p.post.id}}{% if p.rec %}_{{p.rec.comment_id}}{% elif p.comment_id %}{{p.comment_id}}{% endif %}">ответить</label>
+                    {% if not p.private and p.login!=env.user.login %}
+                        {% if p.recommended %}
+                        <a class="recommend" href="//{{p.post.author.login|lower}}.{{settings.domain}}/{{p.post.id}}/ur?{% if p.comment_id %}comment_id={{p.comment_id}}&{% endif %}csrf_token={{csrf_token()}}">не рекомендовать<!--span class="count">8</span--></a>
+                        {% else %}
+                        <label class="reply-label" for="rec-{{p.post.id}}{% if p.rec %}_{{p.rec.comment_id}}{% elif p.comment_id %}{{p.comment_id}}{% endif %}">рекомендовать</label>
+                        {% endif %}
+                    {% else %}
+                    {#<a class="recommend-inactive"><span class="label">рекомендации</span><!--span class="count">8</span--></a>#}
+                    {% endif %}
+                    <label class="more-label" for="action-{{p.post.id}}{% if p.rec %}_{{p.rec.comment_id}}{% elif p.comment_id %}{{p.comment_id}}{% endif %}">ещё &#9662;</label>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if p.post.author.id==env.user.id %}
+            <div class="edit-buttons">
+                {% if p.editable %}<a class="edit" href="//{{p.post.author.login|lower}}.{{settings.domain}}/{{p.post.id}}/e" title="Редактировать"></a>{% endif %}
+                <a class="del" href="//{{p.post.author.login|lower}}.{{settings.domain}}/{{p.post.id}}/d?csrf_token={{csrf_token()}}" title="Удалить {% if p.is_rec %}рекомендацию{% else %}пост{% endif %}" data-confirm="Вы действительно хотите удалить {% if p.rec %}рекомендацию{% else %}пост{% endif %} #{{p.post.id}}?"></a>
+            </div>
+            {% endif %}
+
+            {% if env.user.id and not p.post.archive %}
+            <input type="checkbox" class="action-cb" name="action-radio" id="action-{{p.post.id}}{% if p.rec %}_{{p.rec.comment_id}}{% elif p.comment_id %}{{p.comment_id}}{% endif %}"/>
+            <div class="action-buttons">
+                {% if p.subscribed %}
+                <a class="subscribe active" href="//{{p.post.author.login|lower}}.{{settings.domain}}/{{p.post.id}}/u?csrf_token={{csrf_token()}}">отписаться</a>
+                {% else %}
+                <a class="subscribe" href="//{{p.post.author.login|lower}}.{{settings.domain}}/{{p.post.id}}/s?csrf_token={{csrf_token()}}">подписаться</a>
+                {% endif %}
+                {% if p.bookmarked %}
+                <a class="bookmark" href="//{{p.post.author.login|lower}}.{{settings.domain}}/{{p.post.id}}/ub?{% if p.comment_id %}comment_id={{p.comment_id}}&{% endif %}csrf_token={{csrf_token()}}">из закладок</a>
+                {% else %}
+                <a class="bookmark" href="//{{p.post.author.login|lower}}.{{settings.domain}}/{{p.post.id}}/b?{% if p.comment_id %}comment_id={{p.comment_id}}&{% endif %}csrf_token={{csrf_token()}}">в закладки</a>
+                {% endif %}
+                {% if env.user.id == p.post.author.id %}
+                    {% if p.post.pinned %}
+                    <a class="pin" href="//{{p.post.author.login|lower}}.{{settings.domain}}/{{p.post.id}}/upin?csrf_token={{csrf_token()}}">открепить</a>
+                    {% else %}
+                    <a class="pin" href="//{{p.post.author.login|lower}}.{{settings.domain}}/{{p.post.id}}/pin?csrf_token={{csrf_token()}}">прикрепить</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+
+            {% if not p.post.archive %}
+            <input type="radio" class="reply-radio" name="reply-radio" id="reply-{{p.post.id}}{% if p.rec %}_{{p.rec.comment_id}}{% elif p.comment_id %}{{p.comment_id}}{% endif %}"/>
+            <form class="reply-form" action="/{{p.post.id}}" method="post" enctype="multipart/form-data" autocomplete="off">
+                <textarea name="text">{% if p.rec %}@{{p.rec.author.login}}, {% elif p.login %}@{{p.login}}, {% endif %}</textarea>
+                <input type="hidden" name="comment_id" value="{% if p.rec %}{{p.rec.comment_id or ''}}{% elif p.comment_id %}{{p.comment_id or ''}}{% endif %}"/>
+                <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+                <div class="clearfix">
+                    <div class="attach">
+                        <input type="file" name="attach" multiple/>
+                        <div class="descr">Вы можете выбрать до 10 файлов общим размером не более 10 МБ.</div>
+                    </div>
+                    <div class="buttons">
+                        <input type="submit" value="Ответить"/>
+                    </div>
+                </div>
+            </form>
+
+            {% if not p.private and p.login!=env.user.login %}
+            <input type="radio" class="reply-radio" name="reply-radio" id="rec-{{p.post.id}}{% if p.rec %}_{{p.rec.comment_id}}{% elif p.comment_id %}{{p.comment_id}}{% endif %}"/>
+            <form class="reply-form" action="/{{p.post.id}}/r" method="post">
+                <textarea name="text" placeholder="Текст (опционально)"></textarea>
+                <input type="hidden" name="comment_id" value="{% if p.rec %}{{p.rec.comment_id or ''}}{% elif p.comment_id %}{{p.comment_id or ''}}{% endif %}"/>
+                <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+                <div class="clearfix">
+                    <input type="submit" value="Рекомендовать"/>
+                </div>
+            </form>
+            {% endif %}
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    {% else %}
+    <div class="no-posts">
+        {% if section=='blog' and env.user.id==env.owner.id %}
+        Вы ещё ничего не написали. Можно сделать это <label class="link" for="new-post-cb">прямо сейчас</a>.
+        {% elif section=='blog' %}
+        Пользователь <a class="user" href="//{{env.owner.login|lower}}.{{settings.domain}}/">{{env.owner.login}}</a> ещё ничего не написал.
+        {% else %}
+        Ничего не найдено.
+        {% endif %}
+    </div>
+    {% endfor %}
+
+{% endmacro %}
+
+{% block templates %}
+    <script type="text/x-jquery-tmpl" id="user-balloon-tmpl">
+        <div class="user-balloon" id="ub-${login}">
+            <img class="avatar" src="{{ env.request.protocol }}{{ settings.avatars_root }}{{'{{'}}if avatar{{'}}'}}/40/${avatar}{{'{{'}}else{{'}}'}}/av40.png{{'{{'}}/if{{'}}'}}" alt="${login}"/>
+            <div class="ub-info">
+                <a class="login" href="//${login.toLowerCase()}.{{settings.domain}}/">${login}</a>
+                <span>${name}</span>
+                {{'{{'}}if about{{'}}'}}<p>${about.substring(0, 100)}</p>{{'{{'}}/if{{'}}'}}
+                {% if env.user.id %}
+                {{'{{'}}if login.toLowerCase()!='{{env.user.login|lower}}'{{'}}'}}
+                <div class="sub">
+                    {{'{{'}}if subscribed{{'}}'}}
+                    <a href="//${login.toLowerCase()}.{{settings.domain}}/user/u?csrf_token={{csrf_token()}}">Отписаться</a>
+                        {{'{{'}}if rec_sub{{'}}'}}
+                        <a href="//${login.toLowerCase()}.{{settings.domain}}/user/ur?csrf_token={{csrf_token()}}">Отписаться от рекомендаций</a>
+                        {{'{{'}}else{{'}}'}}
+                        <a href="//${login.toLowerCase()}.{{settings.domain}}/user/sr?csrf_token={{csrf_token()}}">Подписаться на рекомендации</a>
+                        {{'{{'}}/if{{'}}'}}
+                        {{'{{'}}else{{'}}'}}
+                    <a href="//${login.toLowerCase()}.{{settings.domain}}/user/s?csrf_token={{csrf_token()}}">Подписаться</a>
+                    {{'{{'}}/if{{'}}'}}
+                    {{'{{'}}if bl{{'}}'}}
+                    <a href="//${login.toLowerCase()}.{{settings.domain}}/user/ubl?csrf_token={{csrf_token()}}">Удалить из чёрного списка</a>
+                    {{'{{'}}else{{'}}'}}
+                    {{'{{'}}if wl{{'}}'}}
+                        <a href="//${login.toLowerCase()}.{{settings.domain}}/user/uwl?csrf_token={{csrf_token()}}">Удалить из белого списка</a>
+                        {{'{{'}}else{{'}}'}}
+                        <a href="//${login.toLowerCase()}.{{settings.domain}}/user/wl?csrf_token={{csrf_token()}}">Добавить в белый список</a>
+                        {{'{{'}}/if{{'}}'}}
+                        <a href="//${login.toLowerCase()}.{{settings.domain}}/user/bl?csrf_token={{csrf_token()}}">Добавить в чёрный список</a>
+                    {{'{{'}}/if{{'}}'}}
+                </div>
+                {{'{{'}}/if{{'}}'}}
+                {% endif %}
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-jquery-tmpl" id="user-not-found-balloon-tmpl">
+        <div class="user-balloon not-found" id="ub-${login}">
+            <img class="avatar" src="{{ env.request.protocol }}{{ settings.avatars_root }}/av40.png" alt="${login}"/>
+            <div class="ub-info">
+                Пользователь <a class="login" href="//${login.toLowerCase()}.{{settings.domain}}/">${login}</a> не найден.
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-jquery-tmpl forbidden" id="user-forbidden-balloon-tmpl">
+        <div class="user-balloon" id="ub-${login}">
+            <img class="avatar" src="{{ env.request.protocol }}{{ settings.avatars_root }}/av40.png" alt="${login}"/>
+            <div class="ub-info">
+                Пользователь <a class="login" href="//${login.toLowerCase()}.{{settings.domain}}/">${login}</a> скрыл свой профиль.
+            </div>
+        </div>
+    </script>
+{% endblock %}
+
+{% block content %}
+
+    {{ post_list(posts) }}
+
+    <div class="pager clearfix">
+        {% if section in ['recent', 'recent_all'] or not section %}
+            {% if page > 1 %}<a id="newer" href="/recent/{{page-1}}">Следующие</a>{% endif %}
+            {% if posts|count > settings.page_limit %}
+            <a id="older" href="/recent/{{page+1}}">Предыдущие</a>
+            <a id="more" href="/recent" data-page="{{page}}" data-page-limit="{{settings.page_limit}}">Ещё</a>
+            {% endif %}
+
+        {% elif section=='blog' %}
+            {% if page > 1 %}<a id="newer" href="/{{page-1}}">Следующие</a>{% endif %}
+            {% if posts|count > settings.page_limit %}
+            <a id="older" href="/{{page+1}}">Предыдущие</a>
+            <a id="more" href="/" data-page="{{page}}" data-page-limit="{{settings.page_limit}}">Ещё</a>
+            {% endif %}
+
+        {% elif section=='recent_posts' %}
+            {% if page > 1 %}<a id="newer" href="/posts/{{page-1}}">Следующие</a>{% endif %}
+            {% if posts|count > settings.page_limit %}
+            <a id="older" href="/posts/{{page+1}}">Предыдущие</a>
+            <a id="more" href="/posts/" data-page="{{page}}" data-page-limit="{{settings.page_limit}}">Ещё</a>
+            {% endif %}
+
+        {% else %}
+            {% if page > 1 %}<a id="newer" href="/{{section}}/{{page-1}}">Следующие</a>{% endif %}
+            {% if posts|count > settings.page_limit %}
+            <a id="older" href="/{{section}}/{{page+1}}">Предыдущие</a>
+            <a id="more" href="/{{section}}/" data-page="{{page}}" data-page-limit="{{settings.page_limit}}">Ещё</a>
+            {% endif %}
+        {% endif %}
+    </div>
+
+{% endblock %}
+

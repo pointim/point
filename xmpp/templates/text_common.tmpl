@@ -1,0 +1,15 @@
+{% macro post(author, tags, title, text, link, files, settings) -%}
+@{{author}}: {% if tags %}{% for t in tags %}*{{ t }} {% endfor %}{% endif %}
+{% if title %}[{{title}}]
+{% endif %}{% if text %}{{text|safe}}
+{% endif %}{% if link %}{{link}}
+{% endif %}{% if files %}{% for f in files %}http{{settings.media_root}}/{{f}}
+{% endfor %}{% endif %}
+{%- endmacro %}
+
+{% macro comment(post_id, comment_id, comment_to, to_comment_id, author, text, files, is_rec, settings) -%}
+{{comment_id}}. @{{author}}
+{% if comment_to %}@{{comment_to}}, {% endif %}{%if text %}{{text|safe}}
+{% endif %}{% if files %}{% for f in files %}http{{settings.media_root}}/{{f}}
+{% endfor %}{% endif %}{% if is_rec %}! {% endif %}#{{post_id}}/{{comment_id}} https://{{settings.domain}}/{{post_id}}#{{comment_id}}
+{%- endmacro %}

@@ -1,0 +1,129 @@
+{% extends "/base.html" %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/profile.css"/>
+<script type="text/javascript" src="//{{settings.domain}}/js/jquery.autosize.js"></script>
+<script type="text/javascript" src="//{{settings.domain}}/js/profile.js"></script>
+{% endblock %}
+
+{% block subheader %}
+    <a href="/profile">Основное</a>
+    <span class="active">Аккаунты</span>
+{% endblock %}
+
+{% block title %}Профиль {{env.user.login}} &mdash; Аккаунты{% endblock %}
+
+{% block content %}
+<div>
+    {% if errors %}
+    <ul class="errors">
+        {% for e in errors %}
+        {% if e=='password' %}<li>Неверно введён текущий пароль.</li>{% endif %}
+        {% if e=='xmpp' %}<li>Неверно введён JID.</li>{% endif %}
+        {% if e=='confirm' %}<li>Неверный код подтверждения.</li>{% endif %}
+        {% if e=='ulogin-fail' %}<li>Не удалось связаться с сервером uLogin.</li>{% endif %}
+        {% endfor %}
+    </ul>
+    {% if settings.debug %}<!--{{errors}}-->{% endif %}
+    {% endif %}
+
+    {% if saved %}
+    <div class="saved">Аккаунты сохранены.</div>
+    {% endif %}
+    {% if not env.user.check_password_set() %}
+    <div class="warning">
+        У Вас ещё не установлен пароль.
+        В целях безопасности настоятельно рекомендуем <a href="/profile">установить его</a> прямо сейчас.
+    </div>
+    {% endif %}
+
+    <h1>Аккаунты</h1>
+
+    <form id="profile-form" action="/profile/accounts" method="post">
+        <div class="row">
+            <div class="label">XMPP</div>
+            <div class="value">
+                    {% for addr in jids %}
+                    <div class="addr-row">
+                        <input type="checkbox" class="del" name="xmpp-del" id="jid-del-{{loop.index}}" value="{{addr}}"/>
+                        <div class="buttons">
+                            <label class="del" for="jid-del-{{loop.index}}" title="Удалить"></label>
+                            <input type="radio" class="set-active" name="xmpp-set-active" id="jid-set-active-{{loop.index}}" value="{{addr}}"{% if addr==active_jid %} checked="checked"{% endif %}/>
+                            <label class="set-active" for="jid-set-active-{{loop.index}}" title="Сделать активным"></label>
+                        </div>
+                        <div class="addr"><input type="email" disabled="disabled" value="{{addr}}"/></div>
+                    </div>
+                    {% endfor %}
+
+                    {% if unconfirmed %}
+                    <h4>Неподтверждённые:</h4>
+                    {% for addr in unconfirmed %}
+                    <div class="addr-row">
+                        <input type="checkbox" class="del" name="xmpp-del" id="ujid-del-{{loop.index}}" value="{{addr}}"/>
+                        <div class="buttons">
+                            <label class="del" for="ujid-del-{{loop.index}}" title="Удалить"></label>
+                        </div>
+                        <div class="addr"><input type="email" disabled="disabled" value="{{addr}}"/></div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+
+                    {% if jids_err %}
+                    {% for addr in jids_err %}
+                    <div class="addr-row">
+                        <div class="addr"><input type="email" name="xmpp" value="{{addr}}" placeholder="Добавить JID"/></div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <h4>Добавить новый:</h4>
+                    <div class="addr-row">
+                        <div class="addr"><input type="email" name="xmpp" placeholder="Добавить JID"/></div>
+                    </div>
+                    {% endif %}
+            </div>
+        </div>
+
+        <h1></h1>
+        <div class="row">
+            <div class="label">Социальные сети</div>
+            <div class="value">
+                {% for u in env.user.get_ulogin_accounts() %}
+                <div class="addr-row ulogin">
+                    <input type="checkbox" class="del" name="ulogin-del" id="ulogin-del-{{loop.index}}" value="{{u.network}}|{{u.uid}}"/>
+                    <div class="buttons">
+                        <label class="del" for="ulogin-del-{{loop.index}}" title="Удалить"></label>
+                    </div>
+                    <div class="addr">
+                        <i class="icon-ulogin {{u.network}}"></i><a href="{{u.profile}}">{{u.name}} ({{u.nickname}})</a>
+                    </div>
+                </div>
+                {% endfor %}
+
+                Добавить:
+                <script src="//ulogin.ru/js/ulogin.js"></script>
+                <div id="uLogin" data-ulogin="display=panel;fields=nickname,first_name,last_name,photo_big;optional={{ fields|join(',') }};providers=facebook,vkontakte,yandex,google,twitter,openid;hidden=mailru,linkedin,flickr,lastfm,steam,livejournal,instagram;redirect_uri=https%3A%2F%2F{{settings.domain}}%2Fprofile%2Fulogin"></div>
+                <div class="descr">
+                    Эта информация не показывается никому и используется только для аутентификации.
+                </div>
+            </div>
+        </div>
+
+        <h1></h1>
+
+        {% if env.user.check_password_set() %}
+        <div class="row">
+            <div class="label">Текущий пароль</div>
+            <div class="value">
+                <input type="password" name="password" value="" required="required"/>
+                <div class="descr">Для сохранения изменений необходимо ввести текущий пароль.</div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="row">
+            <input type="submit" value="Сохранить"/>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

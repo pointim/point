@@ -1,0 +1,6 @@
+{% if blacklist %}Your blacklist:
+{% for u in blacklist %}@{{u.login}}{% if loop.last %}.{% else %}, {% endif %}{% endfor %}{% endif %}{% if tags %}
+
+Tags:
+{% for tt in tags %}{% for t in tt.tags %}*{{t}}{% if not loop.last %}, {% endif %}{% endfor %}{% if tt.login %} of @{{tt.login}}{% endif %}{% if loop.last %}.{% else %};{% endif %}
+{% endfor %}{% endif %}{% if not blacklist and not tags %}Your blacklist is empty.{% endif %}

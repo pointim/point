@@ -1,0 +1,32 @@
+{% extends "/blog.html" %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/blog.css"/>
+<link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/tags.css"/>
+{% endblock %}
+
+{% block title %}Блог {{env.owner.login}}{% endblock %}
+
+{% block subheader %}
+    <span class="active user">@{{env.owner.login}}</span>
+{% endblock %}
+
+{% block content %}
+    <h1>Все теги @{{env.owner.login}}</h1>
+
+    <div class="clearfix" id="order-switch">
+        {% if sort_by_name %}
+        <a class="active" href="/tags">по алфавиту &darr;</a>
+        <a href="/tags?order=cnt">по количеству &uarr;</a>
+        {% else %}
+        <a href="/tags">по алфавиту &darr;</a>
+        <a class="active" href="/tags?order=cnt">по количеству &uarr;</a>
+        {% endif %}
+    </div>
+
+    <div class="clearfix" id="tags-list">
+    {% for t in tags %}
+        <a class="tag" href="/?tag={{t.tag|urlencode}}" title="{{t.tag}}: {{t.cnt}}">{{t.tag}}<span>{{t.cnt}}</span></a>
+    {% endfor %}
+    </div>
+{% endblock %}

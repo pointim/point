@@ -1,0 +1,6 @@
+@{{author}} has edited #{{post_id}}:{% if tags %}
+{% for t in tags %}*{{ t }} {% endfor %}{% endif %}
+{{text|safe}}{% if files %}
+{% for f in files %}http{{settings.media_root}}/{{f}}
+{% endfor %}{% endif %}
+#{{post_id}} https://{{settings.domain}}/{{post_id}}

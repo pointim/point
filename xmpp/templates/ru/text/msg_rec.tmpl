@@ -1,0 +1,6 @@
+{% import 'text_common.tmpl' as common -%}
+@{{author}} рекомендует: {% if text %}{{text|safe}}{% endif %}
+{{common.post(post_author, tags, title, post_text, link, files, settings)-}}
+{% if comments %}
+Комментариев: {{comments}}{% endif %}
+#{{post_id}}{% if comment_id %}/{{comment_id}}{% endif %} https://{{settings.domain}}/{{post_id}}{% if comment_id %}#{{comment_id}}{% endif %}

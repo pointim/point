@@ -1,0 +1,320 @@
+{% extends "/base.html" %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/profile.css"/>
+<script type="text/javascript" src="//{{settings.domain}}/js/jquery.autosize.js"></script>
+<script type="text/javascript" src="//{{settings.domain}}/js/profile.js"></script>
+{% endblock %}
+
+{% block subheader %}
+    <span class="active">Основное</span>
+    <a href="/profile/accounts">Аккаунты</a>
+{% endblock %}
+
+{% block title %}Профиль {{env.user.login}} &mdash; Основное{% endblock %}
+
+{% block content %}
+<div>
+    {% if errors %}
+    <ul class="errors">
+        {% for e in errors %}
+        {% if e=='invalid-login' %}<li>Недопустимый или занятый логин</li>{% endif %}
+        {% if e=='rename-timeout' %}<li>Вы не можете переименовываться чаще одного раза в сутки.</li>{% endif %}
+        {% if e=='password' %}<li>Неверно введён текущий пароль.</li>{% endif %}
+        {% if e=='filetype' %}<li>Недопустимый тип изображения</li>{% endif %}
+        {% if e=='birthdate' %}<li>Неверно введена дата рождения</li>{% endif %}
+        {% if e=='gender' %}<li>Неверно указан пол</li>{% endif %}
+        {% if e=='location' %}<li>Неверно указан город</li>{% endif %}
+        {% if e=='about' %}<li>Слишком длинное описание</li>{% endif %}
+        {% if e=='homepage' %}<li>Слишком длинный URL сайта</li>{% endif %}
+        {% if e=='email' %}<li>Слишком длинный e-mail</li>{% endif %}
+        {% if e=='xmpp' %}<li>Слишком длинный JID</li>{% endif %}
+        {% if e=='skype' %}<li>Слишком длинный Skype</li>{% endif %}
+        {% if e=='icq' %}<li>Слишком длинный ICQ</li>{% endif %}
+        {% if e=='confirm' %}Новый пароль и подтверждение не совпадают{% endif %}
+        {% if e=='lang' %}<li>Недопустимый язык</li>{% endif %}
+        {% if e=='tz' %}<li>Недопустимый часовой пояс</li>{% endif %}
+        {% if e=='im.cut' %}<li>Слишком большая величина обрезания постов</li>{% endif %}
+        {% endfor %}
+        {% if settings.debug %}<!--{{errors}}-->{% endif %}
+    </ul>
+    {% endif %}
+    {% if saved %}
+    <div class="saved">Профиль обновлён.</div>
+    {% endif %}
+    {% if not env.user.check_password_set() %}
+    <div class="warning">
+        У Вас ещё не установлен пароль.
+        В целях безопасности настоятельно рекомендуем установить его прямо сейчас.
+    </div>
+    {% endif %}
+    <form id="profile-form" action="/profile" method="post" enctype="multipart/form-data">
+
+        <h1>Аватар</h1>
+
+        <div id="avatar-row" class="row">
+            <div class="label">
+                <img class="avatar" src="{% if env.user.avatar %}{{ env.request.protocol }}{{ settings.avatars_root }}/80/{{env.user.avatar}}{% else %}{{ env.request.protocol }}{{settings.avatars_root}}/av80.png{% endif %}" alt="avatar"/>
+            </div>
+            <div class="value">
+                
+                <input type="file" id="avatar-input" name="avatar"/>
+                <label><input type="checkbox" name="remove-avatar"/>&nbsp;Удалить аватар</label>
+            </div>
+        </div>
+
+        <h1>Информация</h1>
+
+        <div class="row">
+            <div class="label">Ник</div>
+            <div class="value">
+                <input type="text" {% if env.user.is_renamed() %}readonly="readonly" disabled="disabled"{% else %}name="login"{% endif %} value="{{env.user.login}}"/>
+                {% if not env.user.is_renamed() %}
+                <div class="descr">Менять ник можно не чаще одного раза в сутки</div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="label">Имя</div>
+            <div class="value"><input type="text" name="name" value="{% if info.name %}{{info.name}}{% endif %}"/></div>
+        </div>
+        <div class="row">
+            <div class="label">Дата рождения</div>
+            <div class="value">
+                <input type="text" id="birthdate" name="birthdate" value="{{ info.birthdate|strftime("%d.%m.%Y") or '' }}" placeholder="ДД.ММ.ГГГГ"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="label">Пол</div>
+            <div class="value">
+                <label><input type="radio" name="gender" value="m"{% if info.gender == True %} checked="checked"{% endif %}/>Мужской</label>
+                <label><input type="radio" name="gender" value="f"{% if info.gender == False %} checked="checked"{% endif %}/>Женский</label>
+                <label><input type="radio" name="gender" value="n"{% if info.gender == None %} checked="checked"{% endif %}/>Робот</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="label">Город</div>
+            <div class="value"><input type="text" name="location" value="{% if info.location %}{{info.location}}{% endif %}"/></div>
+        </div>
+        <div class="row">
+            <div class="label">О себе</div>
+            <div class="value"><textarea name="about" maxlength="500">{% if info.about %}{{info.about}}{% endif %}</textarea></div>
+        </div>
+        <div class="row">
+            <div class="label">Сайт</div>
+            <div class="value"><input type="text" name="homepage" value="{% if info.homepage %}{{info.homepage}}{% endif %}"/></div>
+        </div>
+        <div class="row">
+            <div class="label">E-mail</div>
+            <div class="value">
+            <input type="text" name="email" value="{% if info.email %}{{info.email}}{% endif %}"/>
+            <p class="descr">Это публичный e-mail, который отображается в информации о пользователе. Не обязателен.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="label">JID</div>
+            <div class="value">
+                <input type="text" name="xmpp" value="{% if info.xmpp %}{{info.xmpp}}{% endif %}"/>
+                <p class="descr">Это публичный JID, который отображается в информации о пользователе, он не привязывается к аккаунту.<br/>
+                Для привязки JID'ов используйте вкладку <a href="/profile/accounts">&laquo;Аккаунты&raquo;</a>.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="label">Skype</div>
+            <div class="value"><input type="text" name="skype" value="{% if info.skype %}{{info.skype}}{% endif %}"/></div>
+        </div>
+        <div class="row">
+            <div class="label">ICQ</div>
+            <div class="value"><input type="text" name="icq" value="{% if info.icq %}{{info.icq}}{% endif %}"/></div>
+        </div>
+
+        <h1>Пароль</h1>
+
+        <div class="row">
+            <div class="label">Новый пароль</div>
+            <div class="value"><input type="password" name="new-password" value=""/></div>
+        </div>
+        <div class="row">
+            <div class="label">Ещё раз</div>
+            <div class="value"><input type="password" name="confirm" value=""/></div>
+        </div>
+
+        <h1>Настройки</h1>
+
+        <div class="row">
+            <div class="label">Язык</div>
+            <div class="value">
+                <select name="lang">
+                    <option></option>
+                    <option value="en"{% if profile.lang == 'en' %} selected="selected"{% endif %}>English</option>
+                    <option value="by"{% if profile.lang == 'by' %} selected="selected"{% endif %}>Беларуская</option>
+                    <option value="ru"{% if profile.lang == 'ru' %} selected="selected"{% endif %}>Русский</option>
+                    <option value="uk"{% if profile.lang == 'uk' %} selected="selected"{% endif %}>Українська</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="label">Часовой пояс</div>
+            <div class="value">
+                <select name="tz">
+                    {% for reg in tzlist %}
+                    {% if reg %}
+                    <optgroup label="{{reg}}">
+                        {% for loc in tzlist[reg] %}
+                        <option value="{{reg}}/{{loc}}"{% if profile.tz==reg+'/'+loc%} selected="selected"{% endif %}>{{loc}}</option>
+                        {% endfor %}
+                    </optgroup>
+                    {% else %}
+                    <optgroup label="">
+                    {% for loc in tzlist[reg] %}
+                    <option value="{{loc}}"{% if profile.tz==loc%} selected="selected"{% endif %}>{{loc}}</option>
+                    {% endfor %}
+                    </optgroup>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="label">Ограничения доступа</div>
+            <div class="value">
+                <div>
+                    <label><input type="checkbox" name="deny_anonymous" {% if profile.deny_anonymous %} checked="checked"{% endif %}/>Только залогиненные</label>
+                    <div class="descr">
+                        Доступ к блогу будут иметь только аутентифицированные пользователи.<br/>
+                        Это поможет, например, скрыть Ваши записи от поисковых роботов.
+                    </div>
+                </div>
+                <div>
+                    <label><input type="checkbox" name="private"{% if profile.private %} checked="checked"{% endif %}/>Приватный блог</label>
+                    <div class="descr">
+                        Доступ к блогу будут иметь только пользователи из Вашего белого списка.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h1>Мессенджеры</h1>
+
+        <div class="row">
+            <div class="label">Доставка сообщений</div>
+            <div class="value">
+                <label><input type="radio" name="im.off" value=""{% if not profile.im.off %} checked="checked"{% endif %}/>Включена</label>
+                <label><input type="radio" name="im.off" value="1"{% if profile.im.off %} checked="checked"{% endif %}/>Отключена</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="label">Формат сообщений</div>
+            <div class="value">
+                <label><input type="radio" name="im.xhtml" value="1"{% if profile.im.xhtml %} checked="checked"{% endif %}/>XHTML-IM</label>
+                <label><input type="radio" name="im.xhtml" value=""{% if not profile.im.xhtml %} checked="checked"{% endif %}/>Текст</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="label">Уведомлять меня об упоминаниях</div>
+            <div class="value">
+                <label><input type="radio" name="im.highlight" value="1"{% if profile.im.highlight %} checked="checked"{% endif %}/>Да</label>
+                <label><input type="radio" name="im.highlight" value=""{% if not profile.im.highlight %} checked="checked"{% endif %}/>Нет</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="label">Автоматически переключать активный JID/ресурс</div>
+            <div class="value">
+                <label><input type="radio" name="im.auto_switch" value="1"{% if profile.im.auto_switch %} checked="checked"{% endif %}/>Да</label>
+                <label><input type="radio" name="im.auto_switch" value=""{% if not profile.im.auto_switch %} checked="checked"{% endif %}/>Нет</label>
+            </div>
+        </div>
+        {#<div class="row">
+            <div class="label">Отдельные ресурсы для пользователей (только jabber)</div>
+            <div class="value">
+                <input type="radio" name="im.user_resource" id="ures-1" value="1"{% if profile.im.user_resource %} checked="checked"{% endif %}/>
+                <label for="ures-1">Да</label>
+                <input type="radio" name="im.user_resource" id="ures-0" value=""{% if not profile.im.user_resource %} checked="checked"{% endif %}/>
+                <label for="ures-0">Нет</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="label">Отдельные ресурсы для постов (только jabber)</div>
+            <div class="value">
+                <input type="radio" name="im.post_resource" id="pres-1" value="1"{% if profile.im.post_resource %} checked="checked"{% endif %}/>
+                <label for="pres-1">Да</label>
+                <input type="radio" name="im.post_resource" id="pres-0" value=""{% if not profile.im.post_resource %} checked="checked"{% endif %}/>
+                <label for="pres-0">Нет</label>
+            </div>
+        </div>#}
+        <div class="row">
+            <div class="label">Обрезать длинные посты до</div>
+            <div class="value">
+                <input type="text" id="cut-input" name="im.cut" min="0" maxlength="6" value="{{profile.im.cut or ''}}" /> знаков.
+            </div>
+        </div>
+
+        <h1>Настройки сайта</h1>
+
+        <div class="row">
+            <div class="label">Комментарии</div>
+            <div class="value">
+                <label><input type="radio" name="www.tree" value="1"{% if profile.www.tree %} checked="checked"{% endif %}/>Дерево</label>
+                <label><input type="radio" name="www.tree" value=""{% if not profile.www.tree %} checked="checked"{% endif %}/>Список</label>
+            </div>
+        </div>
+
+        {#<div class="row">
+            <div class="label">CSS для блога</div>
+            <div class="value">
+                <textarea id="blogcss" name="www.blogcss">{{profile.www.blogcss or ''}}</textarea>
+                <div class="descr">Эти стили будут видеть все посетители Вашего блога.</div>
+            </div>
+        </div>#}
+
+        <div class="row">
+            <div class="label">Пользовательский CSS</div>
+            <div class="value">
+                <textarea id="usercss" name="www.usercss">{{profile.www.usercss or ''}}</textarea>
+                <div class="descr">Пользовательские стили для всех страниц. Будут видны только Вам.</div>
+            </div>
+        </div>
+
+        {#<div class="row">
+            <div class="label"></div>
+            <div class="value">
+                <input type="checkbox" id="ignorecss" name="www.ignorecss"{% if profile.www.ignorecss %} checked="checked"{% endif %}/>
+                <label for="ignorecss">Игнорировать пользовальские стили других блогов.</label>
+            </div>
+        </div>#}
+
+        {#<h1>Доменное имя</h1>
+
+        <div class="row">
+            <div class="label">Доменное имя</div>
+            <div class="value">
+                <input type="text" name="domain" value="" placeholder="{{env.user.login}}.{{settings.domain}}"/>
+                <div class="descr">
+                При изменении доменного имени доступ по домену <i>{{env.user.login}}.{{settings.domain}}</i> сохранится.
+                <br/>
+                <a href="//{{settings.domain}}/help/domain">Подробнее о доменных именах</a>
+                </div>
+            </div>
+        </div>#}
+
+
+
+        <h1></h1>
+
+        {% if env.user.check_password_set() %}
+        <div class="row">
+            <div class="label">Текущий пароль</div>
+            <div class="value">
+                <input type="password" name="password" value="" required="required"/>
+                <div class="descr">Для сохранения изменений необходимо ввести текущий пароль.</div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="row">
+            <input type="submit" value="Сохранить"/>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

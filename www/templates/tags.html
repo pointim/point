@@ -1,0 +1,92 @@
+{% extends "/blog.html" %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/tags.css"/>
+<link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/blog.css"/>
+<!--script type="text/javascript" src="//{{settings.domain}}/js/aside.js"></script>
+<script type="text/javascript" src="//{{settings.domain}}/js/jquery.autosize.js"></script>
+<script type="text/javascript" src="//{{settings.domain}}/js/jquery.tmpl.min.js"></script>
+<script type="text/javascript" src="//{{settings.domain}}/js/blog.js"></script-->
+{% endblock %}
+
+{% block title %}
+{% if env.owner.id %}
+Тег{% if tags|count>1 %}и{% endif %} {% for t in tags %}{{t}}{% if loop.index==tags|count %}{% elif loop.index==tags|count-1 %} и {% else %}, {% endif %}{% endfor %} в блоге {{env.owner.login}}
+{% else %}
+Тег{% if tags|count>1 %}и{% endif %} {% for t in tags %}{{t}}{% if loop.index==tags|count %}{% elif loop.index==tags|count-1 %} и {% else %}, {% endif %}{% endfor %}
+{% endif %}
+{% endblock %}
+
+{% block subheader %}
+    {% if env.owner.id %}
+    <span class="active user">@{{env.owner.login}}</span>
+    {% endif %}
+{% endblock %}
+
+{%- macro tags_qs(tags) %}{% for t in tags %}tag={{t|urlencode}}{% if loop.index<tags|count %}&{% endif %}{% endfor %}{% endmacro -%}
+
+{% block aside %}
+{% if env.user.id %}
+<div class="aside" id="tag-info">
+    {% if env.owner.id %}
+    <a id="search-all" href="//{{settings.domain}}/?{% for t in tags %}tag={{t|urlencode}}&{% endfor %}">Искать во всех блогах?</a>
+    {% endif %}
+    {% for tag in tags %}
+    
+    <div class="tag-info">
+        <h1><a href="//{{settings.domain}}/?tag={{tag|urlencode}}">{{tag}}</a></h1>
+
+        <div id="sub">
+        {% if env.user.check_tag_subscribed(tag) %}
+        <a class="sub" href="//{{settings.domain}}/tag/u?tag={{tag|urlencode}}&csrf_token={{csrf_token()}}">Отписаться от <span class="tag">{{tag}}</span></a>
+        {% else %}
+        <a class="sub" href="//{{settings.domain}}/tag/s?tag={{tag|urlencode}}&csrf_token={{csrf_token()}}">Подписаться на <span class="tag">{{tag}}</span></a>
+        {% if env.owner.id and env.owner.id!=env.user.id %}
+        {% if env.user.check_tag_subscribed(tag, env.owner) %}
+        <a class="sub" href="//{{env.owner.login}}.{{settings.domain}}/tag/u?tag={{tag|urlencode}}&csrf_token={{csrf_token()}}">Отписаться от <span class="tag">{{tag}}</span> @{{env.owner.login}}</a>
+        {% else %}
+        <a class="sub" href="//{{env.owner.login}}.{{settings.domain}}/tag/s?tag={{tag|urlencode}}&csrf_token={{csrf_token()}}">Подписаться на <span class="tag">{{tag}}</span> @{{env.owner.login}}</a>
+        {% endif %}
+        {% endif %}
+        {% endif %}
+
+        {% if env.user.check_tag_blacklisted(tag) %}
+        <a class="sub" href="//{{settings.domain}}/tag/ubl?tag={{tag|urlencode}}&csrf_token={{csrf_token()}}">Убрать <span class="tag">{{tag}}</span> из чёрного списка</a>
+        {% else %}
+        <a class="sub" href="//{{settings.domain}}/tag/bl?tag={{tag|urlencode}}&csrf_token={{csrf_token()}}">Добавить <span class="tag">{{tag}}</span> в чёрный список</a>
+        {% if env.owner.id and env.owner.id!=env.user.id %}
+        {% if env.user.check_tag_blacklisted(tag, env.owner) %}
+        <a class="sub" href="//{{env.owner.login}}.{{settings.domain}}/tag/ubl?tag={{tag|urlencode}}&csrf_token={{csrf_token()}}">Убрать <span class="tag">{{tag}}</span> @{{env.owner.login}} из чёрного списка</a>
+        {% else %}
+        <a class="sub" href="//{{env.owner.login}}.{{settings.domain}}/tag/bl?tag={{tag|urlencode}}&csrf_token={{csrf_token()}}">Добавить <span class="tag">{{tag}}</span> @{{env.owner.login}} в чёрный список</a>
+        {% endif %}
+        {% endif %}
+        {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+
+    <a id="expand" href="#"></a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="title">
+        {% if env.owner.id %}
+        <h1>Тег{% if tags|count>1 %}и{% endif %} {% for t in tags %}<i>{{t}}</i>{% if loop.index==tags|count %}{% elif loop.index==tags|count-1 %} и {% else %}, {% endif %}{% endfor %} в блоге {{env.owner.login}}</h1>
+        {% else %}
+        <h1>Тег{% if tags|count>1 %}и{% endif %} {% for t in tags %}<i>{{t}}</i>{% if loop.index==tags|count %}{% elif loop.index==tags|count-1 %} и {% else %}, {% endif %}{% endfor %}</h1>
+        {% endif %}
+    </div>
+
+    {{ post_list(posts) }}
+
+    <div class="pager clearfix">
+        {% if page > 1 %}<a id="newer" href="/{{page-1}}?{{tags_qs(tags)}}">Следующие</a>{% endif %}
+        {% if posts|count > settings.page_limit %}
+        <a id="older" href="/{{page+1}}?{{tags_qs(tags)}}">Предыдущие</a>
+        <a id="more" href="/?{{tags_qs(tags)}}" data-page="{{page}}" data-page-limit="{{settings.page_limit}}">Ещё</a>
+        {% endif %}
+    </div>
+{% endblock %}

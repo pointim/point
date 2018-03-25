@@ -1,0 +1,23 @@
+{% if subscriptions %}
+<p><b>Вы падпісаныя на:</b><br/>
+{% for u in subscriptions %}<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=@{{u.login}}%20" style="color:#4488ff; font-weight:bold; text-decoration:none;">@{{u.login}}</a>{% if loop.last %}.{% else %}, {% endif %}{% endfor %}</p>
+{% endif %}
+{% if subscribers %}
+<p><b>На вас падпісаныя:</b><br/>
+{% for u in subscribers %}<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=@{{u.login}}%20" style="color:#4488ff; font-weight:bold; text-decoration:none;">@{{u.login}}</a>{% if loop.last %}.{% else %}, {% endif %}{% endfor %}</p>
+{% endif %}
+{% if in_req %}
+<p><b>Запыты пра падпіску:</b><br/>
+{% for u in in_req %}<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=@{{u.login}}%20" style="color:#4488ff; font-weight:bold; text-decoration:none;">@{{u.login}}</a>{% if loop.last %}.{% else %}, {% endif %}{% endfor %}</p>
+{% endif %}
+{% if out_req %}
+<p><b>Запыты пра падпіску ад вас:</b><br/>
+{% for u in out_req %}<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=@{{u.login}}%20" style="color:#4488ff; font-weight:bold; text-decoration:none;">@{{u.login}}</a>{% if loop.last %}.{% else %}, {% endif %}{% endfor %}</p>
+{% endif %}
+{% if tags %}
+<p><b>Цэтлікі:</b><br/>
+{% for tt in tags %}
+{% for t in tt.tags %}*{{t}}{% if not loop.last %}, {% endif %}{% endfor %}
+{% if tt.login %} карыстальніка <a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=@{{tt.login}}%20" style="color:#4488ff; font-weight:bold; text-decoration:none;">@{{tt.login}}</a>{% endif %}{% if loop.last %}.{% else %};{% endif %}<br/>
+{% endfor %}</p>
+{% endif %}{% if not subscriptions and not subscribers and not in_req and not out_req and not tags %}Вы пакуль што ні на каго не падпісаныя.{% endif %}

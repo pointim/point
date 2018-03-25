@@ -1,0 +1,8 @@
+{% import 'text_common.tmpl' as common -%}
+{% for p in posts %}
+{% if p.rec and p.rec.text %}@{{p.rec.author.login}}: {{p.rec.text}}
+{% endif %}{% if p.private %}[приватний]{% endif %}{{common.post(p.post.author.login, p.post.tags, p.post.title, p.post.text, p.post.link, p.post.files, settings)-}}
+Коментарів: {{p.post.comments_count()}}
+#{{p.post.id}} https://{{settings.domain}}/{{p.post.id}}
+{% else %}{% if posts_count %}Постів: {{posts_count}}{% else %}Пости відсутні{% endif %}
+{% endfor %}

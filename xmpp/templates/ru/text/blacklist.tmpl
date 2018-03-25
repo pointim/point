@@ -1,0 +1,6 @@
+{% if blacklist %}Ваш чёрный список:
+{% for u in blacklist %}@{{u.login}}{% if loop.last %}.{% else %}, {% endif %}{% endfor %}{% endif %}{% if tags %}
+
+Теги:
+{% for tt in tags %}{% for t in tt.tags %}*{{t}}{% if not loop.last %}, {% endif %}{% endfor %}{% if tt.login %} пользователя @{{tt.login}}{% endif %}{% if loop.last %}.{% else %};{% endif %}
+{% endfor %}{% endif %}{% if not blacklist and not tags %}Ваш чёрный список пуст.{% endif %}

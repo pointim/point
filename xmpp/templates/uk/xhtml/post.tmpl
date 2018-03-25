@@ -1,0 +1,55 @@
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=@{{author}}%20" style="color:#4488ff; font-weight:bold; text-decoration:none;">@{{author}}</a>
+{% if tags %}{% for t in tags %}
+    <a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=**{{t}}" style="color:#808080;text-decoration:none">*{{ t }}</a>
+{% endfor %}{% endif %}
+<p style="margin:0">
+{% if title %}<h4 style="color:#808080;font-weight:bold;">{% if author_name %}<span style="font-weight:normal">{{author_name}}</span><br/>{% endif %}{{title}}</h4>{% else %}<br/>{% endif %}
+{{text|xhtmlim|safe}}
+</p>
+{% if link %}<p style="margin:0"><a href="{{link}}">{{link|short}}</a></p>{% endif %}
+{% if files %}
+<p>
+{% for f in files %}
+<a href="http{{settings.media_root}}/{{f}}">{{f|basename}}</a><br/>
+{% endfor %}
+</p>
+{% endif %}
+
+{% for upd in updates %}
+  <p>UPD {{upd.no}}: {{upd.text}}</p>
+{% endfor %}
+<p style="margin:0">
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}%20{% if type=='post' %}@{{author}},%20{% endif %}" style="color:#448844; font-weight:bold; text-decoration:none;">#{{post_id}}</a> 
+{% if not archive %}
+{% if subscribed %}
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=u%20%23{{post_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;" title="Відписатися">[U]</a>
+{% else %}
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=s%20%23{{post_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;" title="Підписатися">[S]</a>
+{% endif %}
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=!%20%23{{post_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;" title="Рекомендувати">[!]</a>
+{% endif %}
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=~%20%23{{post_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;" title="До закладок">[~]</a>
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}+%20" style="color:#448844; font-weight:bold; text-decoration:none;" title="Останні 10 коментарів">[+]</a>
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}++%20" style="color:#448844; font-weight:bold; text-decoration:none;" title="Усі коментарі">[++]</a>
+<a href="https://{{settings.domain}}/{{post_id}}">https://{{settings.domain}}/{{post_id}}</a>
+</p>
+{% if rec_users %}<p>Рекомендовано {% for u in rec_users %}<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=@{{u.login}}%20" style="color:#4488ff; font-weight:bold; text-decoration:none;">@{{u.login}}</a>{% if loop.index==rec_users|count %}{% elif loop.index==rec_users|count-1 %} та {% else %}, {% endif %}{% endfor %}</p>{% endif %}
+{% for c in comments %}
+<p>
+{{c.comment_id}}. <a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=@{{c.comment_author}}%20" style="color:#4488ff; font-weight:bold; text-decoration:none;">@{{c.comment_author}}</a><br/>
+{% if c.comment_to %}
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=@{{c.comment_to}}%20" style="color:#4488ff; font-weight:bold; text-decoration:none;">@{{c.comment_to}}</a>, 
+{% endif %}
+{{c.comment_text|xhtmlim|safe}}
+{% if c.files %}
+{% for f in c.files %}
+<a href="http{{settings.media_root}}/{{f}}">{{f|basename}}</a><br/>
+{% endfor %}{% endif %}
+{% if c.is_rec %}<b>!</b> {% endif %}<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}%2f{{c.comment_id}}%20@{{c.comment_author}},%20" style="color:#448844; font-weight:bold; text-decoration:none;">#{{post_id}}/{{c.comment_id}}</a> 
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=!%20%23{{post_id}}%2f{{c.comment_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;" title="Рекомендувати">[!]</a>
+<a href="https://{{settings.domain}}/{{post_id}}#{{c.comment_id}}">https://{{settings.domain}}/{{post_id}}#{{c.comment_id}}</a>
+{% if c.to_comment_id %}у відповідь на <a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}%2f{{c.to_comment_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;">/{{c.to_comment_id}}</a>{% endif %}
+</p>
+{% else %}
+<p>{% if comments_count %}Коментарів: {{comments_count}}{% else %}Немає коментарів{% endif %}</p>
+{% endfor %}

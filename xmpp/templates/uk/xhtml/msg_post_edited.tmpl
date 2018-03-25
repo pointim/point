@@ -1,0 +1,24 @@
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=@{{author}}%20" style="color:#4488ff; font-weight:bold; text-decoration:none;">@{{author}}</a> змінив <a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;">#{{post_id}}</a>:<br/>
+{% if tags %}{% for t in tags %}
+    <a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=**{{t}}" style="color:#808080;text-decoration:none">*{{ t }}</a>
+{% endfor %}{% endif %}
+<p>
+{{text|xhtmlim|safe}}
+</p>
+{% if link %}<p style="margin:0"><a href="{{link}}">{{link|short}}</a></p>{% endif %}
+{% if files %}
+<p>
+{% for f in files %}
+<a href="http{{settings.media_root}}/{{f}}">{{f|basename}}</a><br/>
+{% endfor %}
+</p>
+{% endif %}
+<p style="margin:0">
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}%20{% if type=='post' %}@{{author}},%20{% endif %}" style="color:#448844; font-weight:bold; text-decoration:none;">#{{post_id}}</a> 
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=s%20%23{{post_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;" title="Підписатися">[S]</a>
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=!%20%23{{post_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;" title="Рекомендувати">[!]</a>
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=~%20%23{{post_id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;" title="До закладок">[~]</a>
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}+%20" style="color:#448844; font-weight:bold; text-decoration:none;" title="Останні 10 коментарів">[+]</a>
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{post_id}}++%20" style="color:#448844; font-weight:bold; text-decoration:none;" title="Усі коментарі">[++]</a>
+<a href="https://{{settings.domain}}/{{post_id}}">https://{{settings.domain}}/{{post_id}}</a>
+</p>

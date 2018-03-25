@@ -1,0 +1,12 @@
+{% if p.rec %}
+<div>
+    <a href="http://{{p.rec.author.login|lower}}.{{settings.domain}}/">{{p.rec.author.login}}</a> recommends: {{p.rec.text or ''}}
+</div>
+<div>
+    <a href="http://{{p.login|lower}}.{{settings.domain}}/">{{p.post.author.login}}</a>
+</div>
+{% endif %}
+<div>
+    {% if p.rcpt_logins and p.rcpt_logins[0] %}{% for l in p.rcpt_logins %}<a href="http://{{l|lower}}.{{settings.domain}}/">{{l}}</a>, {% endfor %}{% endif %}
+    {{p.post.text|markdown(post=p.post.id)|safe}}
+</div>

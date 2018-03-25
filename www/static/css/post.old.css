@@ -1,0 +1,82 @@
+#top-post {
+    margin: 0;
+    padding: 10px;
+    background-color: #f8f8f8;
+    border-bottom: solid 10px #f4f4f4;
+}
+
+#top-post .avatar {
+    border-color: #f0f0f0;
+}
+
+#comments .post {
+    border: 0;
+}
+
+#comments .post .avatar {
+    width: 24px;
+    height: 24px;
+    margin-left: 16px;
+}
+
+#comments .post .post-id a {
+    font-weight: normal;
+}
+
+#tree-switch {
+    float: right;
+    margin: 0 10px;
+}
+
+.comments {
+    clear: both;
+    margin-left: 20px;
+}
+
+#comments > label,
+#comments > input[type="checkbox"] {
+    display: none;
+}
+
+#comments > .comments label {
+    position: relative;
+    display: block;
+    margin: 0 10px 2em 40px;
+    border-top: dashed 1px #e0e0e0;
+}
+
+#comments > .comments label > span {
+    position: absolute;
+    left: 20px;
+    top: -.75em;
+    background: #ffffff;
+    color: #d0d0d0;
+    padding: 0 5px;
+    cursor: pointer;
+}
+
+#comments > .comments label > span.hide {
+    display: inline;
+}
+
+#comments > .comments label > span.show {
+    display: none;
+}
+
+#comments .comments > input[type="checkbox"]:checked ~ label > span.hide {
+    display: none;
+}
+
+#comments .comments > input[type="checkbox"]:checked ~ label > span.show {
+    display: inline;
+}
+
+#comments .comments > input[type="checkbox"] {
+    position: absolute;
+    left: -9999px;
+}
+
+#comments .comments > input[type="checkbox"]:checked + .comments {
+    display: none;
+}
+

@@ -1,0 +1,26 @@
+{% extends "/blog.html" %}
+
+{% block title %}Всё подряд{% endblock %}
+
+{% block subheader %}
+<span class="active">Всё подряд</span>
+{% endblock %}
+
+
+{% block aside %}{% endblock %}
+
+{% block content %}
+
+<div class="warning-block">
+<h1>Предупреждение</h1>
+
+<p>
+На эту страницу попадают все посты без исключения, и некоторые из них могут оскорбить Вас или вызвать другие негативные эмоции.
+</p>
+
+<div class="buttons clearfix">
+    <a class="button" href="//{{settings.domain}}/all?agree=1">Да, продолжить</a>
+    <a class="empty" href="{{referer}}">Нет, спасибо</a>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% for p in posts %}
+<p style="margin:0">
+{% if p.post.private %}[приватный]{% endif %} 
+{% if p.rec and p.rec.text %}<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=@{{p.rec.author.login}}%20" style="color:#4488ff; font-weight:bold; text-decoration:none;">@{{p.rec.author.login}}</a>: {{p.rec.text}}<br/>{% endif %}
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=@{{p.post.author.login}}%20" style="color:#4488ff; font-weight:bold; text-decoration:none;">@{{p.post.author.login}}</a>: 
+{% for t in p.post.tags %}
+    <span style="color: #808080">*{{ t }}</span> 
+{% endfor %}
+</p>
+<p style="margin:0">
+{% if p.title %}<h4 style="color:#808080;font-weight:bold;">{{p.title}}</h4>{% endif %}
+{% if p.post.type=='feed' %}
+{{p.post.text|safe}}
+{% else %}
+{{p.post.text|xhtmlim|safe}}
+{% endif %}
+</p>
+<p style="margin:0">Комментариев: {{p.post.comments_count()}}</p>
+<a href="xmpp:{{settings.xmpp_jid}}?message;type=chat;body=%23{{p.post.id}}%20" style="color:#448844; font-weight:bold; text-decoration:none;">#{{p.post.id}}</a> 
+<a href="https://{{settings.domain}}/{{p.post.id}}">https://{{settings.domain}}/{{p.post.id}}</a>
+<br/><br/>
+{% else %}
+{% if posts_count %}Постов: {{posts_count}}{% else %}Нет постов{% endif %}
+{% endfor %}

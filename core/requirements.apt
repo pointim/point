@@ -1,0 +1,17 @@
+libevent-dev
+libjpeg-dev
+libmagic-dev
+libpq-dev
+libxml2-dev
+libxslt1-dev
+luajit
+lua-sec
+mercurial
+postgresql-9.3
+prosody
+python-dev
+python-imaging
+python-virtualenv
+realpath
+redis-server
+sshfs

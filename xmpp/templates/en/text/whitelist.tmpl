@@ -1,0 +1,2 @@
+{% if whitelist %}Your white list:
+{% for u in whitelist %}@{{u.login}}{% if loop.last %}.{% else %}, {% endif %}{% endfor %}{% else %}Your white list is empty.{% endif %}

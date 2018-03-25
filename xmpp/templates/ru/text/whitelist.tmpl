@@ -1,0 +1,2 @@
+{% if whitelist %}Ваш белый список:
+{% for u in whitelist %}@{{u.login}}{% if loop.last %}.{% else %}, {% endif %}{% endfor %}{% else %}Ваш белый список пуст.{% endif %}

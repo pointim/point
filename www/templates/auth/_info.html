@@ -1,0 +1,59 @@
+<div class="row">
+    <div class="label"></div>
+    <div class="value">
+        <p>Также, если Вам не трудно, Вы можете <label class="expand-label" for="additional-cb">рассказать немного о себе</label></p>
+    </div>
+</div>
+
+<input type="checkbox" class="expand-cb" id="additional-cb"/>
+<div class="expand-content">
+    <h2>Аватар</h2>
+
+    <div id="avatar-row" class="row">
+        <div class="label">
+            <img class="avatar" src="{% if info.avatar %}{{ info.avatar }}{% else %}{{ env.request.protocol }}{{settings.avatars_root}}/av80.png{% endif %}" alt="avatar"/>
+        </div>
+        <div class="value">
+            <input type="file" id="avatar-input" name="avatar"/>
+        </div>
+    </div>
+
+    <h2>Информация</h2>
+
+    <div class="row">
+        <div class="label">Имя</div>
+        <div class="value"><input type="text" name="name" value="{{ info.name or '' }}"/></div>
+    </div>
+
+    <div class="row">
+        <div class="label">E-mail</div>
+        <div class="value"><input type="text" name="email" value="{{ info.email or '' }}"/></div>
+    </div>
+
+    <div class="row">
+        <div class="label">Дата рождения</div>
+        <div class="value">
+            <input type="text" id="birthdate" name="birthdate" value="{% if info.birthdate %}{{ info.birthdate|strftime("%d.%m.%Y") }}{% endif %}" placeholder="ДД.ММ.ГГГГ"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="label">Пол</div>
+        <div class="value">
+            <input type="radio" name="gender" id="gender-male" value="m"{% if info.gender == True %} checked="checked"{% endif %}/><label for="gender-male">Мужской</label>
+            <input type="radio" name="gender" id="gender-female" value="f"{% if info.gender == False %} checked="checked"{% endif %}/><label for="gender-female">Женский</label>
+            <input type="radio" name="gender" id="gender-dunno" value="n"{% if info.gender == None %} checked="checked"{% endif %}/><label for="gender-dunno">Робот</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="label">Город</div>
+        <div class="value"><input type="text" name="location" value="{{ info.location or '' }}"/></div>
+    </div>
+    <div class="row">
+        <div class="label">О себе</div>
+        <div class="value"><textarea name="about" maxlength="500">{{ info.about or '' }}</textarea></div>
+    </div>
+    <div class="row">
+        <div class="label">Сайт</div>
+        <div class="value"><input type="text" name="homepage" value="{{ info.homepage or '' }}"/></div>
+    </div>
+</div>

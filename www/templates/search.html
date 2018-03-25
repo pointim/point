@@ -1,0 +1,55 @@
+{% extends "/base.html" %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/blog.css"/>
+<link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/code.css"/>
+{% endblock %}
+
+{% block title %}Результаты поиска {{ search_text }}{% endblock %}
+
+{% block content %}
+    {% if search_text %}
+    <h1>Результаты поиска &laquo;{{ search_text }}&raquo;</h1>
+    <p>Всего найдено <b>{{total}}</b> постов и комментариев.</p>
+
+    <div class="content-wrap">
+    {% for p in results %}
+    <div class="post search-post {% if p.private %} private{% endif %}">
+        <div class="title">
+            {% if p.comment_id %}
+            <a class="post-id" href="/{{p.post_id}}#{{p.comment_id}}">#{{p.post_id}}/{{p.comment_id}}</a>
+            {% else %}
+            <a class="post-id" href="/{{p.post_id}}">#{{p.post_id}}</a>
+            {% endif %}
+            <a class="user" href="//{{p.login|lower}}.{{settings.domain}}/">@{{p.login}}</a>
+            {% if p.title %}{{p.title}}{% endif %}
+        </div>
+
+        <div class="text">
+        {{p.text|markdown(post=p.post_id, comment=p.comment_id)|safe}}
+        </div>
+
+        {% if p.tags %}<div class="tags">{% for t in p.tags %}<a class="tag" href="//{{p.login|lower}}.{{settings.domain}}/?tag={{t|urlencode}}">{{t}}</a> {% endfor %}</div>{% endif %}
+    </div>
+    {% endfor %}
+    </div>
+
+    <div class="pager clearfix">
+        {% if page > 1 %}<a id="newer" href="/search?text={{search_text|urlencode}}&page={{page-1}}">Назад</a>{% endif %}
+        {% if has_next %}
+        <a id="older" href="/search?text={{search_text|urlencode}}&page={{page+1}}">Дальше</a>
+        {% endif %}
+    </div>
+    {% else %}
+        <h1>Поиск</h1>
+        <form class="search-form" action="//{{settings.domain}}/search">
+            <input type="submit" value=""/>
+            <div>
+                <input type="text" name="text" value="{{ search_text }}" placeholder="Поиск"/>
+            </div>
+            <label id="search-hide-label" for="search-cb"></label>
+        </form>
+    </div>
+    {% endif %}
+{% endblock %}
+

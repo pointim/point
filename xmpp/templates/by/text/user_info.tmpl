@@ -1,0 +1,14 @@
+@{{login}}
+
+{% if realname %}Імя: {{realname}}
+{% endif %}{% if birthdate %}Дата нараджэння: {{birthdate|strftime('%d.%m.%Y')}}
+{% endif %}{% if location %}Месца: {{location}}
+{% endif %}{% if homepage %}Сайт: {{homepage}}
+{% endif %}{% if xmpp %}Jabber ID: {{xmpp}}
+{% endif %}{% if skype %}Skype: {{skype}}
+{% endif %}{% if icq %}ICQ: {{icq}}
+{% endif %}{% if about %}
+{{about}}
+{% endif %}
+https://{{login|lower}}.{{settings.domain}}/
+{% include "by/text/posts.tmpl" %}

@@ -1,0 +1,3 @@
+#!/bin/sh
+iptables -A INPUT -p tcp -m tcp --dport 16379 -j DROP
+iptables -A INPUT -s 162.213.195.111 -p tcp -m tcp --dport 16379 -j ACCEPT

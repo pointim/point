@@ -1,0 +1,17 @@
+{% extends "/base.html" %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/blog.css"/>
+<link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/code.css"/>
+{% endblock %}
+
+{% block title %}Результаты поиска {{ search_text }}{% endblock %}
+
+{% block content %}
+    <h1>Поиск</h1>
+
+    <div class="content-wrap">
+        <p>Поиск временно недоступен. Приносим свои извинения.</p>
+    </div>
+{% endblock %}
+

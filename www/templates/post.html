@@ -1,0 +1,331 @@
+{% extends "/blog.html" %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/blog.css"/>
+<link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/post.css"/>
+<link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/code.css"/>
+{#<script type="text/javascript" src="//{{settings.domain}}/js/jquery.autosize.js"></script>
+<script type="text/javascript" src="//{{settings.domain}}/js/jquery.tmpl.min.js"></script>
+<script type="text/javascript" src="//{{settings.domain}}/js/blog.js"></script>#}
+{% if clear_post_input %}
+<script>
+var clear_post_input = true;
+</script>
+{% endif %}
+{% endblock %}
+
+{% block title %}{{post.text[:64]}} — Блог {{env.owner.login}}{% endblock %}
+
+{% macro comments_list(comments) %}
+    {% for c in comments %}
+    <a name="{{c.id}}"></a>
+    <article class="post{% if c.is_rec %} recommendation{% endif %}{% if c.unread %} unread{% endif %}" data-id="{{post.id}}" data-comment-id="{{c.id}}"{% if c.to_comment_id %} data-to-comment-id="{{c.to_comment_id}}"{% endif %}>
+        <header class="post-header">
+            {% if c.author.id==-1 %}
+            <img class="post-avatar" src="{{ env.request.protocol }}{{ settings.avatars_root }}/av24.png" alt="{{post.login}}"/>
+            {% else %}
+            <a href="//{{c.author.login}}.{{settings.domain}}/"><img class="post-avatar" src="{{ env.request.protocol }}{{ settings.avatars_root }}{% if c.author.info.avatar %}/24/{{c.author.info.avatar}}{% else %}/av24.png{% endif %}" alt="{{post.login}}"/></a>
+            {% endif %}
+
+            {% if c.author.id==-1 %}
+            <span class="post-author user anon">{{c.author.login}}</span>
+            {% else %}
+            <a href="//{{c.author.login}}.{{settings.domain}}/" class="post-author user">{{c.author.login}}</a>
+            {% endif %}
+
+            <div class="post-created">
+                <span>{{c.created|strftime("%d %b")}}</span>
+                {% if c.created|strftime("%Y")==__now__|strftime("%Y") %}
+                <span>{{c.created|strftime("%H:%M")}}</span>
+                {% else %}
+                <span>{{c.created|strftime("%Y")}}</span>
+                {% endif %}
+            </div>
+        </header>
+        <div class="post-content">
+            <div class="text">
+                {{c.text|markdown(post=post.id, comment=c.id)|safe}}
+            </div>
+            {% if c.files %}
+            <div class="files clearfix">
+                {% for f in c.files %}
+                <a class="postimg" href="{{env.request.protocol}}{{ settings.media_root }}/{{ f }}">
+                    <img src="{{env.request.protocol}}{{ settings.media_root }}/{{ f }}.thumb" alt="{{ f|basename }}"/>
+                </a>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="clearfix">
+                {% if c.updated %}
+                <div class="comment-updated">
+                    Комментарий был отредактирован в {{c.updated.strftime('%H:%M:%S %d.%m.%Y')}}
+                </div>
+                {% endif %}
+                <div class="post-id">
+                    <a href="#{{c.id}}">#{{post.id}}/{{c.id}}</a>
+                    {% if c.to_comment_id %}
+                    в ответ на <a class="comment-id" href="#{{c.to_comment_id}}">/{{c.to_comment_id}}</a>
+                    {% endif %}
+                </div>
+
+                {% if env.user.id and not post.archive %}
+                <div class="action-labels">
+                    <label class="reply-label" for="reply-{{post.id}}_{{c.id}}">ответить</label>
+                    {% if c.author == env.user and c.is_editable() %}
+                    <label class="reply-label" for="edit-{{post.id}}_{{c.id}}"></label>
+                    {% endif %}
+                    {% if not post.private and c.author.login!=env.user.login %}
+                        {% if c.recommended %}
+                        <a class="recommend" href="//{{post.author.login|lower}}.{{settings.domain}}/{{post.id}}/ur?comment_id={{c.id}}&csrf_token={{csrf_token()}}">не рекомендовать<!--span class="count">8</span--></a>
+                        {% else %}
+                        <label class="reply-label" for="rec-{{post.id}}_{{c.id}}">рекомендовать</label>
+                        {% endif %}
+                    {% else %}
+                    {#<a class="recommend-inactive"><span class="label">рекомендации</span><!--span class="count">8</span--></a>#}
+                    {% endif %}
+                    <label class="more-label" for="action-{{post.id}}_{{c.id}}">ещё &#9662;</label>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if c.author.id==env.user.id or post.author.id==env.user.id %}
+            <div class="edit-buttons">
+                <a class="del" href="//{{post.author.login|lower}}.{{settings.domain}}/{{post.id}}/d?comment_id={{c.id}}&csrf_token={{csrf_token()}}" title="Удалить {% if c.is_rec %}рекомендацию{% else %}комментарий{% endif %}" data-confirm="Вы действительно хотите удалить {% if c.is_rec %}рекомендацию{% else %}комментарий{% endif %} #{{post.id}}/{{c.id}}?"></a>
+            </div>
+            {% endif %}
+
+            {% if env.user.id %}
+            <input type="checkbox" class="action-cb" name="action-radio" id="action-{{post.id}}_{{c.id}}"/>
+            <div class="action-buttons">
+                {% if c.bookmarked %}
+                <a class="bookmark" href="//{{post.author.login|lower}}.{{settings.domain}}/{{post.id}}/ub?comment_id={{c.id}}&csrf_token={{csrf_token()}}">из закладок</a>
+                {% else %}
+                <a class="bookmark" href="//{{post.author.login|lower}}.{{settings.domain}}/{{post.id}}/b?comment_id={{c.id}}&csrf_token={{csrf_token()}}">в закладки</a>
+                {% endif %}
+            </div>
+
+            {% if c.author == env.user and c.is_editable() %}
+            <input type="radio" class="reply-radio" name="reply-radio" id="edit-{{post.id}}_{{c.id}}"/>
+            <form class="reply-form" action="/{{post.id}}/edit-comment/{{c.id}}" method="post" enctype="multipart/form-data" autocomplete="off">
+                <textarea name="text">{{c.text}}</textarea>
+                <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+                <div class="clearfix">
+                    <div class="buttons">
+                        <input type="submit" value="Сохранить"/>
+                    </div>
+                </div>
+            </form>
+            {% endif %}
+
+            {% if not post.archive %}
+            <input type="radio" class="reply-radio" name="reply-radio" id="reply-{{post.id}}_{{c.id}}"/>
+            <form class="reply-form" action="/{{post.id}}" method="post" enctype="multipart/form-data" autocomplete="off">
+                <textarea name="text">@{{c.author.login}}, </textarea>
+                <input type="hidden" name="comment_id" value="{{c.id or ''}}"/>
+                <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+                <div class="clearfix">
+                    <div class="attach">
+                        <input type="file" name="attach" multiple/>
+                        <div class="descr">Вы можете выбрать до 10 файлов общим размером не более 10 МБ.</div>
+                    </div>
+                    <div class="buttons">
+                        <input type="submit" value="Ответить"/>
+                    </div>
+                </div>
+            </form>
+
+            {% if not post.private and c.author.login!=env.user.login %}
+            <input type="radio" class="reply-radio" name="reply-radio" id="rec-{{post.id}}_{{c.id}}"/>
+            <form class="reply-form" action="/{{post.id}}/r" method="post">
+                <textarea name="text" placeholder="Текст (опционально)"></textarea>
+                <input type="hidden" name="comment_id" value="{{c.id or ''}}"/>
+                <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+                <div class="clearfix">
+                    <input type="submit" value="Рекомендовать"/>
+                </div>
+            </form>
+            {% endif %}
+            {% endif %}
+            {% endif %}
+        </div>
+    </article>
+    {% if c.comments %}
+    {#<input type="checkbox" id="comments-{{c.id}}"/>#}
+        <div class="comments">{{ comments_list(c.comments) }}</div>
+        <!--<label for="comments-{{c.id}}"><span class="hide">свернуть</span><span class="show">развернуть</span></span></label>-->
+    {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+{% block content %}
+    {% if errors %}
+    <ul class="errors">
+        {% for e in errors %}
+        {% if e=='expired' %}<li>Истекло время редактирования.</li>{% endif %}
+        {% if e=='commented' %}<li>У поста уже есть комментарии.</li>{% endif %}
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <div id="top-post" class="post{% if post.private %} private{% endif %}" data-id="{{post.id}}">
+        <header class="post-header">
+
+            <a href="//{{post.author.login}}.{{settings.domain}}/"><img class="post-avatar" src="{{ env.request.protocol }}{{ settings.avatars_root }}{% if post.author.get_info("avatar") %}/40/{{post.author.get_info("avatar")}}{% else %}/av40.png{% endif %}" alt="{{post.author.login}}"/></a>
+            <a href="//{{post.author.login}}.{{settings.domain}}/" class="post-author user">{{post.author.login}}</a>
+
+            <div class="post-created">
+                <span>{{post.created|strftime("%d %b")}}</span>
+                {% if post.created|strftime("%Y")==__now__|strftime("%Y") %}
+                <span>{{post.created|strftime("%H:%M")}}</span>
+                {% else %}
+                <span>{{post.created|strftime("%Y")}}</span>
+                {% endif %}
+            </div>
+        </header>
+
+        <div class="post-content">
+            {% if post.tags %}<p class="post-tags">{% for t in post.tags %}<a class="post-tag" href="//{{post.author.login|lower}}.{{settings.domain}}/?tag={{t|urlencode}}">{{t}}</a> {% endfor %}</p>{% endif %}
+
+            <div class="text">
+                {% if post.title %}<h1>{% if post.link %}<a href="{{post.link}}">{{post.title}}</a>{% else %}{{post.title}}{% endif %}</h1>{% endif %}
+                {% if env.owner.type=='feed' %}
+                {{ post.text|safe }}
+                {% else %}
+                {{post.text|markdown(post=post.id)|safe}}
+                {% endif %}
+            </div>
+            {% if post.files %}
+            <div class="files clearfix">
+                {% for f in post.files %}
+                <a class="postimg" href="{{env.request.protocol}}{{ settings.media_root }}/{{ f }}">
+                    <img src="{{env.request.protocol}}{{ settings.media_root }}/{{ f }}.thumb" alt="{{ f|basename }}"/>
+                </a>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% if post.tune %}
+            <div class="post-tune">Текущий трек: {{post.tune['artist']}} &mdash; {{post.tune['title']}}</div>
+            {% endif %}
+
+            {% set rec_users = post.recommended_users() %}
+            {% if rec_users %}
+            <div class="rec-users">
+            Рекомендовано: 
+            {% for u in rec_users %}
+            <a class="user" href="//{{u.login|lower}}.{{settings.domain}}/">{{u.login}}</a>{% if loop.index==rec_users|count %}{% elif loop.index==rec_users|count-1 %} и {% else %}, {% endif %}
+            {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="clearfix">
+                <div class="post-id">
+                    <a href="//{{settings.domain}}/{{post.id}}">#{{post.id}}
+                    {% if comments_count %}<span class="cn">{{comments_count}}</span>{% endif %}</a>
+                </div>
+
+                {% if env.user.id and not post.archive %}
+                <div class="action-labels">
+                    <label class="reply-label" for="reply-{{post.id}}">ответить</label>
+                    {% if not post.private and post.author.login!=env.user.login %}
+                        {% if post.check_recommended(env.user) %}
+                        <a class="recommend" href="//{{post.author.login|lower}}.{{settings.domain}}/{{post.id}}/ur?csrf_token={{csrf_token()}}">не рекомендовать<!--span class="count">8</span--></a>
+                        {% else %}
+                        <label class="reply-label" for="rec-{{post.id}}">рекомендовать</label>
+                        {% endif %}
+                    {% else %}
+                    {#<a class="recommend-inactive"><span class="label">рекомендации</span><!--span class="count">8</span--></a>#}
+                    {% endif %}
+                    <label class="more-label" for="action-{{post.id}}">ещё &#9662;</label>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if post.author.id==env.user.id %}
+            <div class="edit-buttons">
+                {% if post.editable %}<a class="edit" href="//{{post.author.login|lower}}.{{settings.domain}}/{{post.id}}/e" title="Редактировать"></a>{% endif %}
+                <a class="del" href="//{{post.author.login|lower}}.{{settings.domain}}/{{post.id}}/d?csrf_token={{csrf_token()}}" title="Удалить пост" data-confirm="Вы действительно хотите удалить пост #{{post.id}}?"></a>
+            </div>
+            {% endif %}
+
+            {% if env.user.id %}
+            <input type="checkbox" class="action-cb" name="action-radio" id="action-{{post.id}}"/>
+            <div class="action-buttons">
+                {% if post.check_subscriber(env.user) %}
+                <a class="subscribe active" href="//{{post.author.login|lower}}.{{settings.domain}}/{{post.id}}/u?csrf_token={{csrf_token()}}">отписаться</a>
+                {% else %}
+                <a class="subscribe" href="//{{post.author.login|lower}}.{{settings.domain}}/{{post.id}}/s?csrf_token={{csrf_token()}}">подписаться</a>
+                {% endif %}
+                {% if post.check_bookmarked(env.user) %}
+                <a class="bookmark" href="//{{post.author.login|lower}}.{{settings.domain}}/{{post.id}}/ub?csrf_token={{csrf_token()}}">из закладок</a>
+                {% else %}
+                <a class="bookmark" href="//{{post.author.login|lower}}.{{settings.domain}}/{{post.id}}/b?&csrf_token={{csrf_token()}}">в закладки</a>
+                {% endif %}
+            </div>
+
+            {% if not post.archive %}
+            <input type="radio" class="reply-radio" name="reply-radio" id="reply-{{post.id}}"/>
+            <form class="reply-form" action="/{{post.id}}" method="post" enctype="multipart/form-data" autocomplete="off">
+                <textarea name="text">@{{post.author.login}}, </textarea>
+                <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+                <div class="clearfix">
+                    <div class="attach">
+                        <input type="file" name="attach" multiple/>
+                        <div class="descr">Вы можете выбрать до 10 файлов общим размером не более 10 МБ.</div>
+                    </div>
+                    <div class="buttons">
+                        <input type="submit" value="Ответить"/>
+                    </div>
+                </div>
+            </form>
+
+            {% if not post.private and post.author.login!=env.user.login %}
+            <input type="radio" class="reply-radio" name="reply-radio" id="rec-{{post.id}}"/>
+            <form class="reply-form" action="/{{post.id}}/r" method="post">
+                <textarea name="text" placeholder="Текст (опционально)"></textarea>
+                <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+                <div class="clearfix">
+                    <input type="submit" value="Рекомендовать"/>
+                </div>
+            </form>
+            {% endif %}
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+    {# Comments #}
+
+    <div id="comments">
+
+    <div id="tree-switch">
+        <a{% if not tree %} class="active"{% endif %} href="?tree=0">список</a>
+        <a{% if tree %} class="active"{% endif %} href="?tree=1">дерево</a>
+    </div>
+
+    {{ comments_list(comments) }}
+
+    <div class="pager clearfix">
+        {% if page > 1 %}
+        <a id="older" href="/{{post.id}}/{{page-1}}">Предыдущие</a>
+        {% endif %}
+        {% if page < last_page %}
+        <a id="newer" href="/{{post.id}}/{{page+1}}">Следующие</a>
+        {% endif %}
+    </div>
+
+    {% if not post.archive %}
+    <div id="post-reply" class="post">
+        {% if env.user.id %}
+        <form class="reply-form" action="/{{post.id}}" method="post">
+            <div>
+                <!--img src="/img/form-arrow.png" alt=""/-->
+                <div><textarea type="text" id="text-input" name="text" placeholder="Текст ответа">@{{post.author.login}}, </textarea></div>
+                <input type="hidden" name="csrf_token" value="{{csrf_token()}}"/>
+                <input type="submit" value="Ответить"/>
+            </div>
+        </form>
+        {% endif %}
+    </div>
+    {% endif %}
+    </div>
+{% endblock %}

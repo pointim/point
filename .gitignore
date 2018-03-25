@@ -2,6 +2,4 @@ img
 data
 log
 ssl
-docker-entrypoint-initdb.d/*.sql
-docker-entrypoint-initdb.d/*.sql.gz
 .vimrc

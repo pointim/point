@@ -9,7 +9,7 @@ libs = ['/home/point/core/lib']
 apps = ['views', 'api']
 
 # redis
-cache_socket = 'tcp://redis-cache:6379'
+cache_socket = 'tcp://redis-cache-web:6379'
 session_socket = 'tcp://redis-sessions:6379'
 storage_socket = 'tcp://redis-storage:6379'
 pubsub_socket = 'tcp://redis-pubsub:6379'

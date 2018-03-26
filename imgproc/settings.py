@@ -6,7 +6,7 @@ libs = ['/home/point/core/lib']
 
 domain = os.getenv(DOMAIN, 'point.local')
 
-cache_socket = 'tcp://redis-cache:6379'
+cache_socket = 'tcp://redis-cache-imgproc:6379'
 imgproc_socket = 'tcp://redis-imgproc:6379'
 
 queue_timeout = 5

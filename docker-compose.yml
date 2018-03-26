@@ -19,13 +19,6 @@ services:
     volumes:
       - ./data/redis/storage:/data
 
-  redis-cache:
-    image: "redis:alpine"
-    sysctls:
-      net.core.somaxconn: '511'
-    volumes:
-      - ./data/redis/cache:/data
-
   redis-queue:
     image: "redis:alpine"
     sysctls:
@@ -48,9 +41,8 @@ services:
       - ./core:/home/point/core
       - ./imgproc:/home/point/imgproc
       - ./img:/home/point/img
-      #- ./log:/home/point/log
     depends_on:
-      - redis-cache
+      - redis-cache-imgproc
       - redis-imgproc
 
   redis-imgproc:
@@ -59,6 +51,13 @@ services:
       net.core.somaxconn: '511'
     volumes:
       - ./data/redis/imgproc:/data
+
+  redis-cache-imgproc:
+    image: "redis:alpine"
+    sysctls:
+      net.core.somaxconn: '511'
+    volumes:
+      - ./data/redis/cache-imgproc:/data
 
   # web
   www:
@@ -70,10 +69,9 @@ services:
       - ./www:/home/point/www
       - ./img:/home/point/img
       - ./doc:/home/point/doc
-      #- ./log:/home/point/log
     depends_on:
       - db
-      - redis-cache
+      - redis-cache-web
       - redis-storage
       - redis-queue
       - redis-pubsub
@@ -87,10 +85,9 @@ services:
     volumes:
       - ./core:/home/point/core
       - ./www:/home/point/www
-      #- ./log:/home/point/log
     depends_on:
       - db
-      - redis-cache
+      - redis-cache-web
       - redis-storage
       - redis-queue
       - redis-pubsub
@@ -102,6 +99,13 @@ services:
       net.core.somaxconn: '511'
     volumes:
       - ./data/redis/sessions:/data
+
+  redis-cache-web:
+    image: "redis:alpine"
+    sysctls:
+      net.core.somaxconn: '511'
+    volumes:
+      - ./data/redis/cache-web:/data
 
   nginx:
     image: "nginx"
@@ -146,9 +150,15 @@ services:
       - ./xmpp:/home/point/xmpp
     depends_on:
       - db
-      - redis-cache
+      - redis-cache-xmpp
       - redis-storage
       - redis-queue
       - redis-pubsub
       - prosody
 
+  redis-cache-xmpp:
+    image: "redis:alpine"
+    sysctls:
+      net.core.somaxconn: '511'
+    volumes:
+      - ./data/redis/cache-xmpp:/data

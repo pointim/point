@@ -11,8 +11,8 @@ echo '127.0.0.1 point.local i.point.local arts.point.local' >> /etc/hosts
 Clone the repo:
 
 ```sh
-git clone https://github.com/artss/point-docker.git
-cd point-docker
+git clone https://github.com/artss/point.git
+cd point
 ```
 
 Initialize:

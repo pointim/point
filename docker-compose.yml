@@ -162,3 +162,13 @@ services:
       net.core.somaxconn: '511'
     volumes:
       - ./data/redis/cache-xmpp:/data
+
+  # stat
+  stat:
+    image: "point-os"
+    command: ["/home/point/stat/run.sh"]
+    volumes:
+      - ./stat:/home/point/stat
+      - ./www:/home/point/www
+    depends_on:
+      - db

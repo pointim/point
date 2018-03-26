@@ -130,14 +130,14 @@ def blacklisters():
     fd.close()
 
 if __name__ == "__main__":
-    #users()
-    #posts()
-    #comments()
-    #posters_weekly()
-    #commenters_weekly()
-    #most_commented_weekly()
-    #posts_avg()
-    #comments_avg()
-    #blacklisted()
+    users()
+    posts()
+    comments()
+    posters_weekly()
+    commenters_weekly()
+    most_commented_weekly()
+    posts_avg()
+    comments_avg()
+    blacklisted()
     blacklisters()
 

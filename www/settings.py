@@ -2,7 +2,7 @@ import os
 
 workers = 8
 
-domain = os.getenv(DOMAIN, 'point.local')
+domain = os.getenv('DOMAIN', 'point.local')
 
 libs = ['/home/point/core/lib']
 

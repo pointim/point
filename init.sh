@@ -1,6 +1,7 @@
 #!/bin/bash
 
 mkdir -p img
+mkdir -p upload
 mkdir -p data/postgresql
 mkdir -p data/redis/{storage,cache,sessions,queue,pubsub,imgproc}
 mkdir -p ssl

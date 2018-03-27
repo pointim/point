@@ -41,6 +41,7 @@ services:
       - ./core:/home/point/core
       - ./imgproc:/home/point/imgproc
       - ./img:/home/point/img
+      - ./upload:/home/point/upload
     depends_on:
       - redis-cache-imgproc
       - redis-imgproc
@@ -67,8 +68,9 @@ services:
     volumes:
       - ./core:/home/point/core
       - ./www:/home/point/www
-      - ./img:/home/point/img
       - ./doc:/home/point/doc
+      - ./img:/home/point/img
+      - ./upload:/home/point/upload
     depends_on:
       - db
       - redis-cache-web

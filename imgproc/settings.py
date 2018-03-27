@@ -4,7 +4,7 @@ workers = 4
 
 libs = ['/home/point/core/lib']
 
-domain = os.getenv(DOMAIN, 'point.local')
+domain = os.getenv('DOMAIN', 'point.local')
 
 cache_socket = 'tcp://redis-cache-imgproc:6379'
 imgproc_socket = 'tcp://redis-imgproc:6379'

@@ -1,0 +1,17 @@
+[Unit]
+Description=Point.im
+After=network.target
+RequiresMountsFor=/home
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Type=simple
+User=point
+Group=docker
+WorkingDirectory=/home/point/point
+ExecStart=/usr/local/bin/docker-compose -f /home/point/point/docker-compose.yml -f /home/point/point/docker-compose-production.yml up www bot imgproc nginx
+ExecStop=/usr/local/bin/docker-compose -f /home/point/point/docker-compose.yml -f /home/point/point/docker-compose-production.yml stop www bot imgproc nginx
+Restart=always
+OOMScoreAdjust=-100

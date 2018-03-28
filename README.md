@@ -24,7 +24,11 @@ Initialize:
 Launch:
 
 ```sh
+# Launch the whole service
 docker-compose up
+
+# Launch individual services. See service names in the docker-compose.yml
+docker-compose up www websocket
 ```
 
 Open the URL in your browser:

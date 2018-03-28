@@ -33,4 +33,4 @@ Open the URL in your browser:
 https://point.local/
 ```
 
-All users and XMPP bothave password `123`.
+All users and XMPP botave password `123`.

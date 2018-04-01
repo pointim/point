@@ -59,8 +59,8 @@ urls = (
     (r'^(?P<path>/help.*)$', doc),
     (r'^(?P<path>/(?:donate|contacts|statistics))/?$', doc),
 
-    (r'^/register/?$', auth.register),
-    (r'^/(?P<path>register)/?$', mdoc),
+    #(r'^/register/?$', auth.register),
+    #(r'^/(?P<path>register)/?$', mdoc),
 
     #(r'^/ulogin/?$', auth.ulogin),
     (r'^/login/?$', auth.login),

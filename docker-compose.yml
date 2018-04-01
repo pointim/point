@@ -11,6 +11,8 @@ services:
     volumes:
       - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
       - ./data/postgresql:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432"
 
   redis-storage:
     image: "redis:alpine"
@@ -118,6 +120,7 @@ services:
       - ./www/etc/nginx/www.vars:/etc/nginx/conf.d/www.vars
       - ./img:/home/point/img
       - ./doc:/home/point/doc
+      - ./stat:/home/point/stat
       - ./www/static:/home/point/www/static
     depends_on:
       - www
@@ -171,6 +174,5 @@ services:
     command: ["/home/point/stat/run.sh"]
     volumes:
       - ./stat:/home/point/stat
-      - ./www:/home/point/www
     depends_on:
       - db

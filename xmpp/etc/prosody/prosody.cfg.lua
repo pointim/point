@@ -44,7 +44,7 @@ log = {
 
 daemonize = false;
 
-VirtualHost "point.local"
+VirtualHost "point.im"
   ssl = {
     key = "/home/point/ssl/server.key";
     certificate = "/home/point/ssl/server.crt";

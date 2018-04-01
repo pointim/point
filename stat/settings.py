@@ -14,12 +14,9 @@ db = {
     'maxsize': 10
 }
 
-domain = os.getenv('DOMAIN', 'point.local')
-
 period = 30
 
-stat_path = '/home/point/www/static/files/stat'
-images_path = '/home/point/www/static/img/stat'
+stat_path = '/home/point/stat/stat'
 
 lang = 'en'
 timezone = 'Europe/Moscow'

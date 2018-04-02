@@ -140,15 +140,9 @@
 }
 
 .post .text blockquote {
-    color: #808080;
-    font-style: italic;
     margin-left: 0;
     padding-left: 1em;
     border-left: solid 3px #d9d9d9;
-}
-
-.post .text blockquote p em {
-    font-style: normal;
 }
 
 .post .text pre {

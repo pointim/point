@@ -463,6 +463,10 @@
     white-space: nowrap;
     opacity: 0;
     transition: opacity ease .2s;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
 }
 
 .post:hover .action-buttons {

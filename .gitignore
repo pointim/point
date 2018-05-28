@@ -1,3 +1,8 @@
+backup/pgsql/
+backup/prosody/
+backup/redis/
+stat/stat/
+upload/
 img
 data
 log

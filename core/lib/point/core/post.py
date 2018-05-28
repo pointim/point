@@ -718,7 +718,7 @@ class Comment(object):
                                    self.files])
             else:
                 redis = RedisPool(settings.storage_socket)
-                while True:
+                for n in xrange(1000):
                     try:
                         comment_id = redis.incr('cmnt.%s' % self.post.id)
                         res = db.fetchone("INSERT INTO posts.comments "
@@ -732,7 +732,13 @@ class Comment(object):
                                           anon_login, self.text, self.files])
                         break
                     except IntegrityError:
-                        pass
+                        nres = db.fetchone("SELECT max(comment_id) FROM posts.comments "
+                                          "WHERE post_id=%s;", [unb26(self.post.id)])
+                        if nres:
+                            num = nres[0]
+                        else:
+                            num = 0
+                        comment_id = redis.set('cmnt.%s' % self.post.id, num)
 
                 if res:
                     redis.incr('cmnt_cnt.%s' % unb26(self.post.id))

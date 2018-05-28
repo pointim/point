@@ -11,7 +11,7 @@ def user_sessions(user):
     redis = RedisPool(settings.session_socket)
     try:
         sessions = json.loads(redis.get(_sessions_key(user.id)))
-        print '>>>>>>> sessions', sessions
+        #print '>>>>>>> sessions', sessions
         return sessions
     except (TypeError, ValueError):
         return []

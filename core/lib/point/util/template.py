@@ -186,7 +186,7 @@ class CodePre(Treeprocessor):
     def run(self, root):
         def _line(line):
             line = re.sub('^( )+', lambda s: '&nbsp;' * len(s.group(0)), line)
-            print '----- line', line
+            #print '----- line', line
             return line
 
         for pre in root.findall('pre'):

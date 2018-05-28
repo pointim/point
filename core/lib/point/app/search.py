@@ -50,8 +50,8 @@ def search_posts(text, user=None, private=None, bookmarks=False,
     #results = res['hits']['hits']
     has_next = len(results) > limit
     total = res['hits']['total']
-    from pprint import pprint
-    pprint(res)
+    #from pprint import pprint
+    #pprint(res)
 
     return results[:limit], has_next, total
 

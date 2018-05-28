@@ -222,7 +222,7 @@ def request_password(user):
 def reset_password(code, password):
     redis = RedisPool(settings.storage_socket)
     key = 'reset-password:%s' % code
-    print key
+    #print key
     id = redis.get(key)
     if not id:
         raise UserNotFound

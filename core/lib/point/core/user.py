@@ -160,12 +160,12 @@ class User(object):
 
         phash = sha1(password).hexdigest().lower()
         ph = sha1('%s%s' % (settings.secret, phash)).hexdigest().lower()
-        print '++++++++++++++++++++++++++++++++++', ph
+        #print '++++++++++++++++++++++++++++++++++', ph
         return ph
 
     @classmethod
     def authenticate(cls, login, password):
-        print '-------------------', login, password
+        #print '-------------------', login, password
         res = db.fetchone("SELECT id FROM users.logins "
                          "WHERE lower(login)=%s AND password=%s;",
                          [login.lower(), cls._passhash(password)])

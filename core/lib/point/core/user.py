@@ -311,7 +311,7 @@ class User(object):
     _profile_table = 'users.profile'
     _profile = {
         'private': {'type': 'bool', 'default': False},
-        'lang': {'type': 'str', 're': re.compile(r'^[a-z]{2}$'),
+        'lang': {'type': 'str', 're': re.compile(r'^(?:by|en|ru|uk)$'),
                  'default':settings.lang},
         'tz': {'type': 'int', 'default': settings.timezone},
         'deny_anonymous': {'type': 'bool', 'default': False}

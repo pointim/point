@@ -252,24 +252,42 @@ def add_post(post, title=None, link=None, tags=None, author=None, to=None,
         except IntegrityError:
             pass
 
-    publish('msg.self', {'to': [env.user.id], 'a': 'post', 'post_id': post_id,
-                    'type': post.type, 'author': post.author.login,
-                    'author_name': post.author.get_info('name'),
-                    'tags': post.tags, 'private': post.private,
-                    'title': post.title,'text': post.text, 'link': post.link,
-                    'to_users': [ u.login for u in to_users ],
-                    'files': files,
-                    'cut': True})
+    publish('msg.self', {
+        'to': [env.user.id],
+        'a': 'post',
+        'post_id': post_id,
+        'type': post.type,
+        'author': post.author.login,
+        'author_id': post.author.id,
+        'author_name': post.author.get_info('name'),
+        'tags': post.tags,
+        'private': post.private,
+        'title': post.title,
+        'text': post.text,
+        'link': post.link,
+        'to_users': [u.login for u in to_users],
+        'files': files,
+        'cut': True
+    })
 
     if subscribers:
-        publish('msg', {'to': subscribers, 'a': 'post', 'post_id': post_id,
-                        'type': post.type, 'author': post.author.login,
-                        'author_name': post.author.get_info('name'),
-                        'tags': post.tags, 'private': post.private,
-                        'title': post.title,'text': post.text, 'link': post.link,
-                        'to_users': [ u.login for u in to_users ],
-                        'files': files,
-                        'cut': True})
+        publish('msg', {
+            'to': subscribers,
+            'a': 'post',
+            'post_id': post_id,
+            'type': post.type,
+            'author': post.author.login,
+            'author_id': post.author.id,
+            'author_name': post.author.get_info('name'),
+            'tags': post.tags,
+            'private': post.private,
+            'title': post.title,
+            'text': post.text,
+            'link': post.link,
+            'to_users': [u.login for u in to_users],
+            'files': files,
+            'cut': True
+        })
 
         if post.private:
             ptype = 'private'
@@ -392,10 +410,18 @@ def edit_post(post_id, text=None, tags=None, private=None, files=None):
         subscribers = [ u.id for u in post.recipients() ]
 
     if subscribers:
-        publish('msg', {'to':subscribers, 'a':'post_edited',
-                        'post_id':post.id, 'author':env.user.login,
-                        'tags':tags, 'text':text, 'private': post.private,
-                        'files':files, 'cut': True})
+        publish('msg', {
+            'to': subscribers,
+            'a': 'post_edited',
+            'post_id': post.id,
+            'author': env.user.login,
+            'author_id': env.user.id,
+            'tags': tags,
+            'text': text,
+            'private': post.private,
+            'files': files,
+            'cut': True
+        })
 
     _thumbnails(text)
     cache_del('md:%s' % post.id)
@@ -444,9 +470,14 @@ def update_post(post_id, text):
         subscribers = [ u.id for u in post.recipients() ]
 
     if subscribers:
-        publish('msg', {'to':subscribers, 'a':'post_upd',
-                        'id':post_id, 'author':env.user.login,
-                        'text':text})
+        publish('msg', {
+            'to': subscribers,
+            'a': 'post_upd',
+            'id': post_id,
+            'author': env.user.login,
+            'author_id': env.user.id,
+            'text': text
+        })
 
 @check_auth
 def update_tags(post_id, taglist, save=True):
@@ -1145,15 +1176,31 @@ def add_comment(post_id, to_comment_id, text, files=None,
     subscribers = filter(lambda u: u!=env.user.id,
                          uniqify(hls+post.get_subscribers(bluser=env.user)))
 
-    publish('msg.self', {'to':[env.user.id], 'a':'comment', 'author':env.user.login,
-                    'post_id':post_id, 'comment_id':comment_id, 'text':text,
-                    'to_comment_id':to_comment_id, 'to_text':to_text,
-                    'files':files})
+    publish('msg.self', {
+        'to':[env.user.id],
+        'a':'comment',
+        'author':env.user.login,
+        'author_id':env.user.id,
+        'post_id':post_id,
+        'comment_id':comment_id,
+        'text':text,
+        'to_comment_id':to_comment_id,
+        'to_text':to_text,
+        'files':files
+    })
 
-    publish('msg', {'to':subscribers, 'a':'comment', 'author':env.user.login,
-                    'post_id':post_id, 'comment_id':comment_id, 'text':text,
-                    'to_comment_id':to_comment_id, 'to_text':to_text,
-                    'files':files})
+    publish('msg', {
+        'to': subscribers,
+        'a': 'comment',
+        'author': env.user.login,
+        'author_id': env.user.id,
+        'post_id': post_id,
+        'comment_id': comment_id,
+        'text': text,
+        'to_comment_id': to_comment_id,
+        'to_text': to_text,
+        'files': files
+    })
 
     if post.private:
         ptype = 'private'
@@ -1232,11 +1279,16 @@ def edit_comment(post_id, comment_id, text, editor=None):
     subscribers = map(lambda u: u[0], res)
 
     if subscribers:
-        publish('msg', {'to': subscribers, 'a': 'comment_edited',
-                        'post_id': post_id, 'comment_id': comment_id,
-                        'author': env.user.login,
-                        'text': text,
-                        'cut': True})
+        publish('msg', {
+            'to': subscribers,
+            'a': 'comment_edited',
+            'post_id': post_id,
+            'comment_id': comment_id,
+            'author': env.user.login,
+            'author_id': env.user.id,
+            'text': text,
+            'cut': True
+        })
 
     cache_del('md:%s.%s' % (post_id, comment_id))
     cache_del('mdx:%s.%s' % (post_id, comment_id))
@@ -1505,15 +1557,36 @@ def recommend(post_id, comment_id, text=None):
                        'tags': post.tags})
     subscribers = [r[0] for r in res]
 
-    publish('rec', {'to': post_author.id, 'a':'ok', 'post_id': post_id,
-                    'comment_id': comment_id, 'author': env.user.login,
-                    'text': text, 'rcid': rcid, 'files': files})
+    publish('rec', {
+        'to': post_author.id,
+        'a': 'ok',
+        'post_id': post_id,
+        'comment_id': comment_id,
+        'author': env.user.login,
+        'author_id': env.user.id,
+        'text': text,
+        'rcid': rcid,
+        'files': files
+    })
 
-    publish('msg', {'to':subscribers, 'a':'rec', 'author':env.user.login,
-            'text':text, 'post_id':post_id, 'comment_id': comment_id,
-            'post_author':post_author.login, 'post_text':post_text,
-            'title': title, 'link': link, 'files': files,
-            'tags':tags, 'rcid':rcid, 'comments':ccnt})
+    publish('msg', {
+        'to': subscribers,
+        'a': 'rec',
+        'author': env.user.login,
+        'author_id': env.user.id,
+        'text': text,
+        'post_id': post_id,
+        'comment_id': comment_id,
+        'post_author': post_author.login,
+        'post_author_id': post_author.id,
+        'post_text': post_text,
+        'title': title,
+        'link': link,
+        'files': files,
+        'tags': tags,
+        'rcid': rcid,
+        'comments': ccnt
+    })
 
     try:
         db.batch("INSERT INTO posts.recommendations_recv "
@@ -1708,10 +1781,17 @@ def add_recipients(post_id, to):
     to_users = [ u['login'] for u in res ]
 
     if subscribers:
-        publish('msg', {'to':subscribers, 'a':'post',
-                        'id':post_id, 'author':post.author.login,
-                        'tags':post.tags, 'private':post.private,
-                        'text':post.text, 'to_users':to_users})
+        publish('msg', {
+            'to': subscribers,
+            'a': 'post',
+            'id': post_id,
+            'author': post.author.login,
+            'author_id': post.author.id,
+            'tags': post.tags,
+            'private': post.private,
+            'text': post.text,
+            'to_users': to_users
+        })
     return new_users
 
 @check_auth

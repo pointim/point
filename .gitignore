@@ -3,7 +3,7 @@ backup/prosody/
 backup/redis/
 stat/stat/
 upload/
-img
+./img
 data
 log
 ssl

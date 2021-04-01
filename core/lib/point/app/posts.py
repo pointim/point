@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 
+from geweb import log
 import geweb.db.pgsql as db
 from point.util.env import env
 from point.core.user import User, AlreadySubscribed, SubscribeError, check_auth
@@ -638,6 +639,7 @@ def recent_posts(limit=10, offset=0, asc=False, type=None, unread=False, before=
         offset = ""
 
     if unread:
+        log.info('============== res unread --')
         res = db.fetchall(
             "SELECT "
             "r.user_id, r.post_id AS id,"
@@ -676,6 +678,14 @@ def recent_posts(limit=10, offset=0, asc=False, type=None, unread=False, before=
             {'user_id': env.user.id, 'tz': env.user.get_profile('tz'),
              'limit': limit, 'edit_expire': settings.edit_expire})
     else:
+        recent = db.fetchall(
+            "SELECT id FROM posts.recent WHERE user_id=%s LIMIT 1;",
+            [env.user.id]
+        )
+
+        if not recent:
+            return []
+
         res = db.fetchall(
             "SELECT "
             "r.id AS uid, "

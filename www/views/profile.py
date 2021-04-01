@@ -9,6 +9,9 @@ from point.util import parse_email, parse_date, tzlist, check_tz
 from point.util.imgproc import make_avatar, remove_avatar
 from point.util.www import redirect_anonymous
 from point.util.sessions import add_session
+from point.util.crypt import aes_encrypt, aes_decrypt
+from point.util import timestamp, cache_get, cache_store
+from datetime import datetime, timedelta
 from geweb.session import Session
 from random import randint
 import urllib2
@@ -388,3 +391,17 @@ def ulogin():
                              (env.request.protocol,
                               env.user.login, settings.domain))
 
+@check_auth
+def invite():
+    cache_key = 'invite:%s' % env.user.id
+
+    invite = cache_get(cache_key)
+
+    if not invite:
+        invite = aes_encrypt({
+            'uid': env.user.id,
+            'exp': timestamp(datetime.now() + timedelta(minutes=15))
+        })
+        cache_store(cache_key, invite, 60)
+
+    return render('/profile/invite.html', invite=invite)

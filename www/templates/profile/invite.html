@@ -1,0 +1,31 @@
+{% extends "/base.html" %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="//{{settings.domain}}/css/profile.css"/>
+<script type="text/javascript" src="//{{settings.domain}}/js/profile.js"></script>
+{% endblock %}
+
+{% block subheader %}
+    <a href="/profile">Основное</a>
+    <a href="/profile/accounts">Аккаунты</a>
+    <span class="active">Инвайт</span>
+{% endblock %}
+
+{% block title %}Профиль {{env.user.login}} &mdash; Аккаунты{% endblock %}
+
+{% block content %}
+<div>
+    <h1>Инвайт</h1>
+
+    <p>
+      Вы можете пригласить друга (в том числе и воображаемого), подругу, животное или президента какой-нибудь страны.
+      Главное, чтобы его когнитивных навыков хватило на то, чтобы вставить код в нужное поле при регистрации.
+    </p>
+    <p>
+      Код действует 15 минут, регистрироваться по нему можно многократно. Однако, старайтесь этим не злоупотреблять&nbsp;&mdash; я всё вижу.
+    </p>
+
+    <span class="invite">{{ invite }}</span>
+</div>
+{% endblock %}
+

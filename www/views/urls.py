@@ -59,8 +59,8 @@ urls = (
     (r'^(?P<path>/help.*)$', doc),
     (r'^(?P<path>/(?:donate|contacts|statistics))/?$', doc),
 
-    #(r'^/register/?$', auth.register),
-    #(r'^/(?P<path>register)/?$', mdoc),
+    (r'^/register/?$', auth.register),
+    (r'^/(?P<path>register)/?$', mdoc),
 
     #(r'^/ulogin/?$', auth.ulogin),
     (r'^/login/?$', auth.login),
@@ -71,7 +71,7 @@ urls = (
 
     (r'^/profile/?$', profile.profile),
     (r'^/profile/accounts/?$', profile.accounts),
-    (r'^/profile/ulogin/?$', profile.ulogin),
+    (r'^/profile/invite/?$', profile.invite),
     (r'^/profile/accounts/confirm/(?P<code>[0-9a-f]{40})/?$', profile.confirm_account),
 
     (r'/search/?$', search.search_posts),

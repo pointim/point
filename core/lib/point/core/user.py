@@ -106,7 +106,7 @@ class User(object):
                 if not res:
                     raise UserNotFound(value)
                 self.id, self.login, self.type = res
-                cache_store('id_login:%s' % value.lower(), [res[0], res[1], res[2]])
+                cache_store('id_login:%s' % value.lower(), [res[0], res[1], res[2]], 60)
             return
 
         r = cache_get('addr_id_login:%s' % value.lower())
@@ -314,7 +314,8 @@ class User(object):
         'lang': {'type': 'str', 're': re.compile(r'^[a-z]{2}$'),
                  'default':settings.lang},
         'tz': {'type': 'int', 'default': settings.timezone},
-        'deny_anonymous': {'type': 'bool', 'default': False}
+        'deny_anonymous': {'type': 'bool', 'default': False},
+        'allow_invite': {'type': 'bool', 'default': True}
     }
 
     def set_profile(self, param, value):
@@ -516,8 +517,8 @@ class User(object):
             self.id = db.fetchone("INSERT INTO users.logins (login, type) "
                                  "VALUES (%s, %s) RETURNING id;",
                                  [self.login, self.type])[0]
-            db.perform("INSERT INTO users.info (id, name) VALUES (%s, %s);",
-                       [self.id, self.login])
+            db.perform("INSERT INTO users.info (id, name, inviter) VALUES (%s, %s, %s);",
+                       [self.id, self.login, self.get_info('inviter')])
             db.perform("INSERT INTO users.profile (id, private, lang) "
                        "VALUES (%s, false, 'en');", [self.id])
 

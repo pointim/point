@@ -275,3 +275,13 @@ a.preview-link {
     margin: .5em 0;
 }
 
+.invite {
+  display: inline-block;
+  margin: 1em 0;
+  padding: 1em;
+  border: solid 1px #d0d0d0;
+  font-size: 1.4em;
+  font-family: monospace;
+  background-color: #f0f0f0;
+  white-space: nowrap;
+}

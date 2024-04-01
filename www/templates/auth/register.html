@@ -23,31 +23,24 @@ $(function(){
 
     {% include "/auth/_errors.html" %}
 
-    <form id="profile-form" action="/register" method="post" enctype="multipart/form-data">
+    <form id="profile-form" action="/register" method="post" enctype="multipart/form-data" autocomplete="off">
         <div class="row">
             <div class="label">Ник</div>
-            <div class="value"><input type="text" id="login-input" name="login" required="required" value="{{ info.login }}"/></div>
+            <div class="value"><input type="text" id="login-input" name="login" required value="{{ info.login }}"/></div>
         </div>
 
         <div class="row">
             <div class="label">Пароль</div>
-            <div class="value"><input type="password" name="password" value=""/></div>
+            <div class="value"><input type="password" name="password" value="" required /></div>
         </div>
         <div class="row">
             <div class="label">Ещё раз</div>
-            <div class="value"><input type="password" name="confirm" value=""/></div>
+            <div class="value"><input type="password" name="confirm" value="" required /></div>
         </div>
 
         <div class="row">
-            <div class="label">Введите текст с&nbsp;картинки</div>
-            <div class="value">
-                <script type="text/javascript" src="//www.google.com/recaptcha/api/challenge?k={{settings.recaptcha_public_key}}"></script>
-                <noscript>
-                    <iframe src="//www.google.com/recaptcha/api/noscript?k={{settings.recaptcha_public_key}}" height="300" width="500" frameborder="0"></iframe><br>
-                    <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
-                    <input type="hidden" name="recaptcha_response_field" value="manual_challenge">
-                </noscript>
-            </div>
+            <div class="label">Введите код инвайта</div>
+            <div class="value"><input type="text" name="invite" value="" required /></div>
         </div>
 
         {% include "/auth/_info.html" %}
@@ -68,7 +61,5 @@ $(function(){
         <input type="hidden" name="hi1" id="hi1">
         <input type="hidden" name="hi2" id="hi2">
     </form>
-
-    {% include "/auth/_ulogin.html" %}
 </div>
 {% endblock %}

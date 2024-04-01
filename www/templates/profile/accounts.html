@@ -9,6 +9,7 @@
 {% block subheader %}
     <a href="/profile">Основное</a>
     <span class="active">Аккаунты</span>
+    <a href="/profile/invite">Инвайт</a>
 {% endblock %}
 
 {% block title %}Профиль {{env.user.login}} &mdash; Аккаунты{% endblock %}
@@ -80,31 +81,6 @@
                         <div class="addr"><input type="email" name="xmpp" placeholder="Добавить JID"/></div>
                     </div>
                     {% endif %}
-            </div>
-        </div>
-
-        <h1></h1>
-        <div class="row">
-            <div class="label">Социальные сети</div>
-            <div class="value">
-                {% for u in env.user.get_ulogin_accounts() %}
-                <div class="addr-row ulogin">
-                    <input type="checkbox" class="del" name="ulogin-del" id="ulogin-del-{{loop.index}}" value="{{u.network}}|{{u.uid}}"/>
-                    <div class="buttons">
-                        <label class="del" for="ulogin-del-{{loop.index}}" title="Удалить"></label>
-                    </div>
-                    <div class="addr">
-                        <i class="icon-ulogin {{u.network}}"></i><a href="{{u.profile}}">{{u.name}} ({{u.nickname}})</a>
-                    </div>
-                </div>
-                {% endfor %}
-
-                Добавить:
-                <script src="//ulogin.ru/js/ulogin.js"></script>
-                <div id="uLogin" data-ulogin="display=panel;fields=nickname,first_name,last_name,photo_big;optional={{ fields|join(',') }};providers=facebook,vkontakte,yandex,google,twitter,openid;hidden=mailru,linkedin,flickr,lastfm,steam,livejournal,instagram;redirect_uri=https%3A%2F%2F{{settings.domain}}%2Fprofile%2Fulogin"></div>
-                <div class="descr">
-                    Эта информация не показывается никому и используется только для аутентификации.
-                </div>
             </div>
         </div>
 

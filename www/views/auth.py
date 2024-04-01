@@ -5,6 +5,7 @@ from point.app import users
 from point.util.env import env
 from point.util.www import check_referer
 from point.util.redispool import RedisPool
+from point.util.crypt import aes_decrypt
 from geweb.http import Response
 from geweb.session import Session
 from geweb.exceptions import NotFound, Forbidden
@@ -20,8 +21,6 @@ from random import randint
 import json
 import urllib2
 from datetime import datetime, timedelta
-from recaptcha.client import captcha
-
 from geweb import log
 
 try:
@@ -208,11 +207,11 @@ def register():
     if cache_get('reg-ok:%s' % env.request.remote_host):
         raise Forbidden
 
-    hi1 = env.request.args('hi1')
-    try:
-        hi2 = int(env.request.args('hi2', 0))
-    except ValueError:
-        hi2 = 0
+    # hi1 = env.request.args('hi1')
+    # try:
+    #     hi2 = int(env.request.args('hi2', 0))
+    # except ValueError:
+    #     hi2 = 0
 
     #try:
     #    h = hi2 / (timestamp(datetime.now()) - int(sess['reg_start']))
@@ -220,17 +219,38 @@ def register():
     #    raise Forbidden
     #finally:
     #    pass
-    if hi2 < 5:
-        raise Forbidden
+    # if hi2 < 5:
+    #     raise Forbidden
 
-    try:
-        network = info['network'] if 'network' in info else None
-        uid = info['uid'] if 'uid' in info else None
-    except TypeError:
-        network = None
-        uid = None
+    # try:
+    #     network = info['network'] if 'network' in info else None
+    #     uid = info['uid'] if 'uid' in info else None
+    # except TypeError:
+    #     network = None
+    #     uid = None
 
     errors = []
+
+    inviter = None
+    invite = env.request.args('invite', '').strip()
+
+    if not invite:
+        errors.append('invalid-invite')
+    else:
+        try:
+            data = aes_decrypt(invite)
+
+            now = timestamp(datetime.now())
+            if data['exp'] < now:
+                errors.append('invalid-invite')
+            else:
+                inviter = User(data['uid'])
+                allow_invite = inviter.get_profile('allow_invite')
+                if not allow_invite:
+                    errors.append('invalid-invite')
+        except Exception as e:
+            log.error(e.__str__)
+            errors.append('invalid-invite')
 
     for p in ['login', 'name', 'email', 'birthdate', 'location', 'about', 'homepage']:
         info[p] = env.request.args(p, '').decode('utf-8')
@@ -239,8 +259,8 @@ def register():
 
     login = env.request.args('login', '').strip()
 
-    if hi1 != login:
-        raise Forbidden
+    # if hi1 != login:
+    #     raise Forbidden
 
     if login and validate_nickname(login):
         try:
@@ -256,64 +276,36 @@ def register():
 
     password = env.request.args('password')
     confirm = env.request.args('confirm')
-    if not (network and uid):
-        if not password:
-            errors.append('password')
-        elif password != confirm:
-            errors.append('confirm')
+
+    if not password:
+        errors.append('password')
+    elif password != confirm:
+        errors.append('confirm')
 
     info['birthdate'] = parse_date(info['birthdate']) \
-                            or datetime.now() - timedelta(days=365*16+4)
-
-    if not network and not errors:
-        try:
-            text = env.request.args('recaptcha_response_field')
-            challenge = env.request.args('recaptcha_challenge_field')
-
-            resp = captcha.submit(challenge, text,
-                                  settings.recaptcha_private_key,
-                                  env.request.remote_host)
-
-            if not resp.is_valid:
-                errors.append('captcha')
-
-        except urllib2.URLError, e:
-            log.error('recaptcha fail: %s' % e)
-            #errors.append('recaptcha-fail')
-        except AddressNotFound:
-            return Response(redirect='%s://%s/remember?fail=1' % \
-                        (env.request.protocol, settings.domain))
+                            or datetime.now() - timedelta(days=365*21+4)
 
     if not errors:
         try:
             users.register(login)
+
         except UserExists:
             errors.append('login-in-use')
 
     if errors:
-        if network and uid:
-            tmpl = '/auth/register_ulogin.html'
-        else:
-            tmpl = '/auth/register.html'
+        tmpl = '/auth/register.html'
 
         sess['reg_start'] = timestamp(datetime.now())
         sess.save()
         return render(tmpl, fields=ULOGIN_FIELDS, info=info, errors=errors)
+
+    env.user.set_info('inviter', inviter.id)
 
     for p in ['name', 'email', 'birthdate', 'gender', 'location', 'about', 'homepage']:
         env.user.set_info(p, info[p])
 
     if password:
         env.user.set_password(password)
-
-    if network and uid:
-        _nickname = info['_nickname'] if '_nickname' in info else None
-        _name = info['_name'] if '_name' in info else None
-        _profile = info['_profile'] if '_profile' in info else None
-        try:
-            env.user.bind_ulogin(network, uid, _nickname, _name, _profile)
-        except UserExists:
-            raise Forbidden
 
     if env.request.args('avatar'):
         ext = env.request.args('avatar', '').split('.').pop().lower()
@@ -334,75 +326,9 @@ def register():
 
         env.user.set_info('avatar', '%s?r=%d' % (filename, randint(1000, 9999)))
 
-    cache_store('reg-ok:%s' % env.request.remote_host, 1, 1800)
     env.user.save()
+    cache_store('reg-ok:%s' % env.request.remote_host, 1, 900)
 
     env.user.authenticate()
 
     return Response(redirect=get_referer())
-
-@catch_errors
-def ulogin():
-    if env.user.id:
-        raise AlreadyAuthorized
-
-    sess = Session()
-
-    if env.request.method == 'POST':
-        url = "http://ulogin.ru/token.php?token=%s&host=%s" % \
-                (env.request.args('token'), settings.domain)
-        try:
-            resp = urllib2.urlopen(url)
-            data = dict.fromkeys(ULOGIN_FIELDS)
-            data.update(json.loads(resp.read()))
-            resp.close()
-        #except urllib2.URLError:
-        #    return render('/auth/login.html', fields=ULOGIN_FIELDS,
-        #
-        #                  errors=['ulogin-fail'])
-        except: pass
-
-        try:
-            env.user.authenticate_ulogin(data['network'], data['uid'])
-            if env.user.id:
-                return Response(redirect=get_referer())
-        except NotAuthorized:
-            pass
-
-        login = data['nickname'].strip(u' -+.')
-        if login:
-            login = re.sub(r'[\._\-\+]+', '-', login)
-
-        info = {
-            'login': login,
-            'network': data['network'],
-            'uid': data['uid'],
-            'name': ('%s %s' % (data['first_name'], data['last_name'])).strip(),
-            'email': data['email'],
-            'avatar': data['photo_big'],
-            'birthdate': data['bdate'],
-            'gender': True if data['sex'] == '2' else False if data['sex'] == '1' else None,
-            'location': "%s, %s" % (data['city'], data['country']) \
-                        if data['city'] and data['country'] else \
-                        data['city'] or data['country'],
-
-            '_nickname': data['nickname'],
-            '_name': ('%s %s' % (data['first_name'], data['last_name'])).strip(),
-            '_profile': data['profile'],
-        }
-
-        sess['reg_info'] = info
-        sess.save()
-
-    else:
-        info = sess['reg_info']
-
-        if not info or not 'network' in info or not 'uid' in info:
-            return Response(redirect='%s://%s/register' % \
-                    (env.request.protocol, settings.domain))
-
-    info['birthdate'] = parse_date(info['birthdate']) \
-                        or datetime.now() - timedelta(days=365*16+4)
-
-    return render('/auth/register_ulogin.html', info=info)
-

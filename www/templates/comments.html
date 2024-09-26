@@ -11,6 +11,6 @@
 {% if unread_comments %}<a class="unread-count" href="/comments/unread">{{unread_comments or 0}}</a>{% endif %}
 {% endif %}
 {% if unread_comments %}
-<a class="clear-unread-btn" href="/comments/clear?csrf_token={{csrf_token()}}" title="Отметить все как прочитанные"></a>
+<a class="clear-unread-btn" href="/comments/clear?csrf_token={{csrf_token()}}" title="Отметить всё как прочитанное"></a>
 {% endif %}
 {% endblock %}

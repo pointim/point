@@ -9,3 +9,5 @@ log
 ssl
 docker-compose-production.yml
 .vimrc
+.idea
+*.iml
